@@ -6,7 +6,7 @@
  *  3. Реализовать операции поиска по заданным критериям и выборки подмножества элементов по заданным критериям. Реализовать 
  *  поиск в двух вариантах: линейный поиск и двоичный поиск на отсортированном контейнере.
  *  4. Предусмотреть вывод подмножества выборки на экран и в файл.
- *
+ *  ----------------------------------------------------------------------------------------------------------------------------
  *  Мой вариант:
  *  9. Запись в журнале экзаменационной сессии содержит следующую информацию: курс, код группы, фамилия студента, номер зачетной
  *  книжки, дисциплина, оценка по дисциплине. Вычисляются средние баллы по дисциплине, по группе, по курсу. Поиск по группе, по курсу,
@@ -14,11 +14,33 @@
  */
 
 #include "stdafx.h"
-#include "Entry.h"
+#include "EntriesUtils.h"
 
-typedef Entry value_type;
-typedef std::deque<value_type> container;
-typedef std::deque<value_type>::iterator cIterator;
+class Entry
+{
+private:
+	int numOfRecordBook; //номер зачетки
+	std::string surname;
+	int course;
+	std::string group;
+	std::string  discipline;
+	int mark;
+public:
+	Entry()
+	{
+	}
+	Entry(int aNumOfRecordBook, std::string aSurname, int aCourse, std::string aGroup, std::string  aDiscipline, int aMark) {
+		numOfRecordBook = aNumOfRecordBook;
+		surname = aSurname;
+		course = aCourse;
+		group = aGroup;
+		discipline = aDiscipline;
+		mark = aMark;
+	}
+	~Entry()
+	{
+	}
+};
 
 void printMenu() {
 		std::cout << "1 - add entry";
@@ -26,7 +48,7 @@ void printMenu() {
 		std::cout << "3 - remove entry";
 		std::cout << "4 - output in the console\n";
 		std::cout << "5 - save to file\n";
-		std::cout << "6 - find and edit\n";
+		std::cout << "6 - edit\n";
 		std::cout << "7 - calculate average mark\n" << std::endl;
 		std::cout << "0 - exit";
 }
@@ -46,6 +68,30 @@ int inputItem(){
 	return i;
 }
 
+//exception?? Need to handle incorrect input
+Entry& inputEntry() {
+	int num;
+	std::string surname;
+	int course;
+	std::string group;
+	std::string  discipline;
+	int mark;
+	std::cout << "  Number of student's record book: ";
+	std::cin >> num;
+	std::cout << "  Surname: ";
+	std::cin >> surname;
+	std::cout << "  Course: ";
+	std::cin >> course;
+	std::cout << "  Group: ";
+	std::cin >> group;
+	std::cout << "  Discipline: ";
+	std::cin >> discipline;
+	std::cout << "  Mark: ";
+	std::cin >> mark;
+	Entry entry(num, surname, course, group, discipline, mark);
+	return entry;
+}
+
 void doMenuAction() {
 	int item;
 	container c;
@@ -58,6 +104,7 @@ void doMenuAction() {
 		switch (item)
 		{
 		case 1:
+			EntriesUtils<Entry>::add(inputEntry());
 			break;
 		case 2:
 			break;
