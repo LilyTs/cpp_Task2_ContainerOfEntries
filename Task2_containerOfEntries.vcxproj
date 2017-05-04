@@ -146,14 +146,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InterfaceUtils.h" />
-    <ClInclude Include="MyContainer.h" />
+    <ClInclude Include="Container.h" />
     <ClInclude Include="Entry.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InterfaceUtils.cpp" />
-    <ClCompile Include="MyContainer.cpp" />
+    <ClCompile Include="Container.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

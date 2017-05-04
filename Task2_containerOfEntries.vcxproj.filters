@@ -27,10 +27,10 @@
     <ClInclude Include="Entry.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="MyContainer.h">
+    <ClInclude Include="InterfaceUtils.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="InterfaceUtils.h">
+    <ClInclude Include="Container.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,10 +44,10 @@
     <ClCompile Include="Entry.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="MyContainer.cpp">
+    <ClCompile Include="InterfaceUtils.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="InterfaceUtils.cpp">
+    <ClCompile Include="Container.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>

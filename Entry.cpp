@@ -46,6 +46,8 @@ bool Entry::cmpMark(const Entry &en1, const Entry &en2) {
 	return en1.mark < en2.mark;
 }
 
+//аксессоры
+
 const int Entry::getNumOfRecordBook() const {
 	return numOfRecordBook;
 }

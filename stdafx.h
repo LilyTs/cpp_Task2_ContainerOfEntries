@@ -16,7 +16,6 @@
 #include <algorithm>
 #include <fstream>
 
-typedef std::deque<Entry> container;
-enum criterion{group, course, surname, numRecBook, mark};
+enum criterion{group, course, surname, numRecBook, discipline, mark};
 
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы

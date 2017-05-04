@@ -12,10 +12,10 @@ InterfaceUtils::~InterfaceUtils()
 {
 }
 
-void InterfaceUtils::printMenu() {
-	std::cout << "1 - add entry";
-	std::cout << "2 - find entry";
-	std::cout << "3 - remove entry";
+void InterfaceUtils::printMenu() const {
+	std::cout << "1 - add";
+	std::cout << "2 - find";
+	std::cout << "3 - remove";
 	std::cout << "4 - output in the console\n";
 	std::cout << "5 - save to file\n";
 	std::cout << "6 - edit\n";
@@ -23,7 +23,11 @@ void InterfaceUtils::printMenu() {
 	std::cout << "0 - exit";
 }
 
-int InterfaceUtils::inputMenuItem() {
+void InterfaceUtils::showTitle() const {
+	std::cout << "Number of record book  " << "Surname  " << "Course  " << "Group  " << "Discipline  " << "Mark" << std::endl;
+}
+
+int InterfaceUtils::inputMenuItem() const {
 	printMenu();
 	int i;
 	bool ok;
@@ -39,7 +43,7 @@ int InterfaceUtils::inputMenuItem() {
 }
 
 //exception?? Need to handle incorrect input
-Entry& InterfaceUtils::inputEntry() {
+Entry& InterfaceUtils::inputEntry() const {
 	Entry en;
 	int intVal;
 	std::string strVal;
@@ -53,15 +57,18 @@ Entry& InterfaceUtils::inputEntry() {
 	std::cin >> intVal;
 	en.setCourse(intVal);
 	std::cout << "  Group: ";
-	std::cin >> en.group;
+	std::cin >> strVal;
+	en.setGroup(strVal);
 	std::cout << "  Discipline: ";
-	std::cin >> en.discipline;
+	std::cin >> strVal;
+	en.setDiscipline(strVal);
 	std::cout << "  Mark: ";
-	std::cin >> en.mark;
+	std::cin >> intVal;
+	en.setMark(intVal);
 	return en;
 }
 
-int InterfaceUtils::inputCriterionNum() {
+int InterfaceUtils::inputCriterionNum() const {
 	int item;
 	bool ok;
 	do {
@@ -77,7 +84,7 @@ int InterfaceUtils::inputCriterionNum() {
 	return item;
 }
 
-char InterfaceUtils::inputTypeOfSearch() {
+char InterfaceUtils::inputTypeOfSearch() const {
 	char item;
 	bool ok;
 	do {
@@ -89,7 +96,7 @@ char InterfaceUtils::inputTypeOfSearch() {
 }
 
 //ввод поискового запроса (искомое значение поля записи)
-std::string InterfaceUtils::inputQuery() {
+std::string InterfaceUtils::inputQuery() const {
 	std::string query;
 	do {
 		std::cout << "Enter the required field value: ";
@@ -98,9 +105,9 @@ std::string InterfaceUtils::inputQuery() {
 	return /*boost::algorithm::trim()*/query;
 }
 
-void InterfaceUtils::outputRes(container &res) {
-	if (!res.empty())
-		for each (Entry en in res)
+void InterfaceUtils::outputRes(Container<Entry> &res) const {
+	if (!res.c.empty())
+		for each (Entry en in res.c)
 		{
 			std::cout << en.toString();
 		}
@@ -110,40 +117,41 @@ void InterfaceUtils::outputRes(container &res) {
 
 
 
-void InterfaceUtils::linOrBinSearch(const criterion crit) {
-	container foundEntries;
+Container<Entry>& InterfaceUtils::linOrBinSearch(Container<Entry> &c, const criterion crit) const {
+	Container<Entry> res;
 	switch (inputTypeOfSearch()) {
 	case 'L':
 	case'l':
-		foundEntries = MyContainer<Entry>::linearSearch(crit, inputQuery());
+		res.c = c.linearSearch(crit, inputQuery());
 		break;
 	case 'B':
 	case 'b':
-		sort(EntriesUtils<Entry>::c.begin(), EntriesUtils<Entry>::c.end(), Entry::cmpGroup);
-		foundEntries = EntriesUtils<Entry>::binarySearch(crit, inputQuery());
+		res = c.binarySearch(crit, inputQuery());
 		break;
 	}
 
-	outputRes(foundEntries);
+	return res;
 }
 
 //как возвращать множество - через параметр или return, что вернет если ничего не найдено
-void InterfaceUtils::find() {
+Container<Entry>& InterfaceUtils::find(Container<Entry> &c) const {
 	switch (inputCriterionNum()) {
 	case 1:
-		linOrBinSearch(group);
+		return(linOrBinSearch(c, group));
 		break;
 	case 2:
-		linOrBinSearch(course);
+		return(linOrBinSearch(c, course));
 		break;
 	case 3:
-		linOrBinSearch(surname);
+		return(linOrBinSearch(c, surname));
 		break;
 	case 4:
-		linOrBinSearch(numRecBook);
+		return(linOrBinSearch(c, numRecBook));
 		break;
 	case 5:
-		linOrBinSearch(mark);
+		return(linOrBinSearch(c, mark));
 		break;
 	}
 }
+
+

@@ -14,7 +14,7 @@
  */
 
 #include "stdafx.h"
-#include "MyMyContainer.h"
+#include "Container.h"
 #include "Entry.h"
 #include "InterfaceUtils.h"
 
@@ -22,7 +22,7 @@ int main()
 {
 	setlocale(LC_ALL, "Russian");
 	int item;
-	MyMyContainer<Entry> c;
+	Container<Entry> c;
 	std::fstream f;
 
 	while ((item = inputMenuItem()) != 0)
@@ -31,22 +31,18 @@ int main()
 
 		switch (item)
 		{
-		case 1:
+		case 1: //add
 			c.add(inputEntry());
 			std::cout << "Entry has been added." << std::endl;
 			break;
-		case 2:
-			find();
+		case 2: //find
+			outputRes(find(c));
 			break;
-		case 3:
+		case 4: //console output
 			break;
-		case 4:
+		case 5: //save to file
 			break;
-		case 5:
-			break;
-		case 6:
-			break;
-		case 7:
+		case 7: //calc average
 			break;
 		}
 	}
