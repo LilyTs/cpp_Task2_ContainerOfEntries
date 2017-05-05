@@ -11,15 +11,14 @@ public:
 	std::deque<Entry> c;
 	Container();
 	~Container();
-	void add(const Entry &entry);
-	cIterator findFirst(const criterion crit, const std::string query) const;
-	Container<Entry>& linearSearch(const criterion crit, const std::string query) const;
-	Container<Entry>& binarySearch(const criterion crit, const std::string query);
-	bool remove(const Container &subset);
-	bool remove(cIterator &it);
+	bool add(const Entry &en);
+	//cIterator findFirst(const fieldName crit, const std::string query) const;
+	Container<Entry>& linearSearch(const fieldName crit, const std::string query) const;
+	Container<Entry>& binarySearch(const fieldName crit, const std::string query);
+	void remove(Entry &en);
 	void outputToConsole() const;
 	bool saveToFile(std::fstream &f) const;
-	bool edit(cIterator &it);
-	double calcAverageMark(criterion crit, const std::string query) const;
+	void edit(Entry &en);
+	double calcAverageMark(fieldName crit, const std::string query) const;
 };
 

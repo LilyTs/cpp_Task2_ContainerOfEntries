@@ -13,11 +13,16 @@ Container<Entry>::~Container()
 {
 }
 
-void Container<Entry>::add(const Entry &entry) {
-	c.push_back(entry);
+/*cIterator findFirst(const fieldName crit, const std::string query) const {
+	
+}*/
+
+bool Container<Entry>::add(const Entry &en) {
+	if(std::find(c.begin(), c.end(), en) == c.end())
+		c.push_back(en);
 }
 
-/*cIterator find(const criterion crit, const std::string query) const {
+/*cIterator find(const fieldName crit, const std::string query) const {
 	switch (crit) {
 	case group:
 		break;
@@ -29,32 +34,32 @@ void Container<Entry>::add(const Entry &entry) {
 	}
 }*/
 
-Container<Entry>& Container<Entry>::linearSearch(const criterion crit, const std::string query) const {
+Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std::string query) const {
 	Container res;
 	switch(crit){
 	case group:
 		for each (Entry en in c)
-			if (en.getGroup == query)
+			if (en.getGroup() == query)
 				res.c.push_back(en);
 		break;
 	case surname:
 		for each (Entry en in c)
-			if (en.getSurname == query)
+			if (en.getSurname() == query)
 				res.c.push_back(en);
 		break;
 	case course:
 		for each (Entry en in c)
-			if (en.getCourse == stoi(query))
+			if (en.getCourse() == stoi(query))
 				res.c.push_back(en);
 		break;
 	case numRecBook:
 		for each (Entry en in c)
-			if (en.getNumOfRecordBook == stoi(query))
+			if (en.getNumOfRecordBook() == stoi(query))
 				res.c.push_back(en);
 		break;
 	case mark:
 		for each (Entry en in c)
-			if (en.getMark == stoi(query))
+			if (en.getMark() == stoi(query))
 				res.c.push_back(en);
 		break;
 	}
@@ -63,12 +68,12 @@ Container<Entry>& Container<Entry>::linearSearch(const criterion crit, const std
 
 
 
-Container<Entry>& Container<Entry>::binarySearch(const criterion crit, const std::string query) {
+Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std::string query) {
 	Container<Entry> res;
 	cIterator it;
 	switch (crit) {
 	case group:
-		sort(c.begin(), c.end(), Entry::cmpGroup);
+		std::sort(c.begin(), c.end(), Entry::cmpGroup);
 		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpGroup);
 		while (it != c.end() && it->getGroup() == query) {
 			res.c.push_back(*it);
@@ -76,7 +81,7 @@ Container<Entry>& Container<Entry>::binarySearch(const criterion crit, const std
 		}
 		break;
 	case surname:
-		sort(c.begin(), c.end(), Entry::cmpSurname);
+		std::sort(c.begin(), c.end(), Entry::cmpSurname);
 		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpSurname);
 		while (it != c.end() && it->getSurname() == query) {
 			res.c.push_back(*it);
@@ -84,7 +89,7 @@ Container<Entry>& Container<Entry>::binarySearch(const criterion crit, const std
 		}
 		break;
 	case course:
-		sort(c.begin(), c.end(), Entry::cmpCourse);
+		std::sort(c.begin(), c.end(), Entry::cmpCourse);
 		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpCourse);
 		while (it != c.end() && it->getCourse() == stoi(query)) {
 			res.c.push_back(*it);
@@ -92,7 +97,7 @@ Container<Entry>& Container<Entry>::binarySearch(const criterion crit, const std
 		}
 		break;
 	case numRecBook:
-		sort(c.begin(), c.end(), Entry::cmpNumRecBook);
+		std::sort(c.begin(), c.end(), Entry::cmpNumRecBook);
 		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpGroup);
 		while (it != c.end() && it->getNumOfRecordBook() == stoi(query)) {
 			res.c.push_back(*it);
@@ -100,7 +105,7 @@ Container<Entry>& Container<Entry>::binarySearch(const criterion crit, const std
 		}
 		break;
 	case mark:
-		sort(c.begin(), c.end(), Entry::cmpMark);
+		std::sort(c.begin(), c.end(), Entry::cmpMark);
 		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpMark);
 		while (it != c.end() && it->getMark() == stoi(query)) {
 			res.c.push_back(*it);
@@ -111,13 +116,8 @@ Container<Entry>& Container<Entry>::binarySearch(const criterion crit, const std
 	return res;
 }
 
-bool Container<Entry>::remove(const Container &subset) {
-	//std::remove_if(c.begin(), c.end(), [&]() {this->c});
-	
-}
-
-bool Container<Entry>::remove(cIterator &it) {
-
+void Container<Entry>::remove(Entry &en) {
+	std::remove(c.begin(), c.end(), en);
 }
 
 void Container<Entry>::outputToConsole()  const {
@@ -132,11 +132,12 @@ bool Container<Entry>::saveToFile(std::fstream &f) const {
 	}
 }
 
-bool Container<Entry>::edit(cIterator &it) {
+void Container<Entry>::edit(Entry &en) {
+	cIterator it = find(c.begin(), c.end(), en);
 
 }
 
-double Container<Entry>::calcAverageMark(const criterion crit, const std::string query) const {
+double Container<Entry>::calcAverageMark(const fieldName crit, const std::string query) const {
 	int sum = 0;
 	int count = 0;
 	switch(crit){

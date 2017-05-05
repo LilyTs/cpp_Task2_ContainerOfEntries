@@ -16,6 +16,6 @@
 #include <algorithm>
 #include <fstream>
 
-enum criterion{group, course, surname, numRecBook, discipline, mark};
+enum fieldName{group, course, surname, numRecBook, discipline, mark};
 
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы

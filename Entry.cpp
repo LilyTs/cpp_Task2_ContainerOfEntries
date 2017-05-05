@@ -24,6 +24,20 @@ std::string Entry::toString() {
 		+ "\t" + std::to_string(mark);
 }
 
+std::ostream& Entry::operator<<(std::ostream &os) {
+	os << this.toString();
+}
+
+bool Entry::operator==(const Entry &en) {
+	return
+		this->numOfRecordBook == en.getNumOfRecordBook() &&
+		this->surname == en.getSurname() &&
+		this->course == en.getCourse() &&
+		this->group == en.getGroup() &&
+		this->discipline == en.getDiscipline() &&
+		this->mark == en.getMark();
+}
+
 //компараторы, обеспечивающие сравнение записей журнала по различным полям
 
 bool Entry::cmpSurname(const Entry &en1, const Entry &en2) {
