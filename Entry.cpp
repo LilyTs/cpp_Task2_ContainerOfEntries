@@ -25,10 +25,11 @@ std::string Entry::toString() {
 }
 
 std::ostream& Entry::operator<<(std::ostream &os) {
-	os << this.toString();
+	os << this->toString();
+	return os;
 }
 
-bool Entry::operator==(const Entry &en) {
+bool Entry::operator==(const Entry &en) const {
 	return
 		this->numOfRecordBook == en.getNumOfRecordBook() &&
 		this->surname == en.getSurname() &&
@@ -38,27 +39,38 @@ bool Entry::operator==(const Entry &en) {
 		this->mark == en.getMark();
 }
 
-//компараторы, обеспечивающие сравнение записей журнала по различным полям
-
-bool Entry::cmpSurname(const Entry &en1, const Entry &en2) {
-	return en1.surname < en2.surname;
+bool Entry::operator!=(const Entry &en) const {
+	return !(*this == en);
 }
 
-bool Entry::cmpCourse(const Entry &en1, const Entry &en2) {
-	return en1.course < en2.course;
+void Entry::edit() {
+	std::string s;
+	std::cout << "Number of record book (current value = " << this->getNumOfRecordBook() << "): ";
+	std::cin >> s;
+	if (s != "")
+		this->setNumOfRecordBook(stoi(s));
+	std::cout << "Surname (current value = " << this->getSurname() << "): ";
+	std::cin >> s;
+	if (s != "")
+		this->setSurname(s);
+	std::cout << "Course (current value = " << this->getCourse() << "): ";
+	std::cin >> s;
+	if (s != "")
+		this->setCourse(stoi(s));
+	std::cout << "Group (current value = " << this->getGroup() << "): ";
+	std::cin >> s;
+	if (s != "")
+		this->setGroup(s);
+	std::cout << "Discipline (current value = " << this->getDiscipline() << "): ";
+	std::cin >> s;
+	if (s != "")
+		this->setDiscipline(s);
+	std::cout << "Mark (current value = " << this->getMark() << "): ";
+	std::cin >> s;
+	if (s != "")
+		this->setMark(stoi(s));
 }
 
-bool Entry::cmpGroup(const Entry&en1, const Entry &en2) {
-	return en1.group < en2.group;
-}
-
-bool Entry::cmpNumRecBook(const Entry &en1, const Entry &en2) {
-	return en1.numOfRecordBook < en2.numOfRecordBook;
-}
-
-bool Entry::cmpMark(const Entry &en1, const Entry &en2) {
-	return en1.mark < en2.mark;
-}
 
 //аксессоры
 

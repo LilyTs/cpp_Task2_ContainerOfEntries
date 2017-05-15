@@ -15,7 +15,7 @@
 #include <sstream>
 #include <algorithm>
 #include <fstream>
-
+//typedef std::deque<Entry>::iterator cIterator;
 enum fieldName{group, course, surname, numRecBook, discipline, mark};
 
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы

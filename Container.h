@@ -7,7 +7,6 @@ template<class Entry>
 class Container
 {
 public:
-	typedef std::deque<Entry>::iterator cIterator;
 	std::deque<Entry> c;
 	Container();
 	~Container();
@@ -17,8 +16,9 @@ public:
 	Container<Entry>& binarySearch(const fieldName crit, const std::string query);
 	void remove(Entry &en);
 	void outputToConsole() const;
-	bool saveToFile(std::fstream &f) const;
+	bool saveToFile(std::string fileName) const;
 	void edit(Entry &en);
 	double calcAverageMark(fieldName crit, const std::string query) const;
 };
+
 

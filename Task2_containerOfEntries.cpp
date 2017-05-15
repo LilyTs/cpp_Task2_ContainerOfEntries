@@ -45,30 +45,46 @@ void showTitle() {
 	return i;
 }*/
 
+int inputIntValue() {
+	std::string str;
+	int res;
+	try {
+		std::cin >> str;
+		res = stoi(str);
+		return res;
+	}
+	catch (std::exception) {
+		std::cout << " Input error.\n Repeat: " << std::endl;
+		res = inputIntValue();
+	}
+}
+
+
+
 //exception?? Need to handle incorrect input
 Entry& inputEntry() {
-	Entry en;
-	int intVal;
-	std::string strVal;
+	int numRecBook;
+	std::string surname;
+	int course;
+	std::string group;
+	std::string discipline;
+	int mark;
+	std::string str;
+
 	std::cout << "  Number of student's record book: ";
-	std::cin >> intVal;
-	en.setNumOfRecordBook(intVal);
+	numRecBook = inputIntValue();
 	std::cout << "  Surname: ";
-	std::cin >> strVal;
-	en.setSurname(strVal);
+	std::cin >> surname;
 	std::cout << "  Course: ";
-	std::cin >> intVal;
-	en.setCourse(intVal);
+	course = inputIntValue();
 	std::cout << "  Group: ";
-	std::cin >> strVal;
-	en.setGroup(strVal);
+	std::cin >> group;
 	std::cout << "  Discipline: ";
-	std::cin >> strVal;
-	en.setDiscipline(strVal);
+	std::cin >> discipline;
 	std::cout << "  Mark: ";
-	std::cin >> intVal;
-	en.setMark(intVal);
-	return en;
+	mark = inputIntValue();
+
+	return Entry(numRecBook, surname, course, group, discipline, mark);
 }
 
 /*int inputSearchfieldName() {
@@ -106,20 +122,23 @@ const std::string mainMENU = "\n1 - add\n2 - find\n3 - remove\n4 - edit\n5 - out
 const int cntMainMenuITEMS = 8;
 const std::string critForSearchMENU = "\n1 - group\n2 - course\n3 - surname\n4 - number student's record book\n5 - mark\n";
 const int cntSearchCritITEMS = 5;
-const std::string critForMarkMENU = "\n1 - group\n2 - course\n3 - discipline\n";
+const std::string critForAvrMarkMENU = "\n1 - group\n2 - course\n3 - discipline\n";
 const int cntMarkCritITEMS = 3;
 const std::string removeREQUEST = "What entry do you want to remove? Enter number: \n";
+const std::string editREQUEST = "What entry do you want to edit? Enter number: \n";
 
 int inputItem(const int cntITEMS, const std::string REQUEST) {
 	int item;
 	bool ok;
 	do {
-		std::cout << REQUEST;
+		std::cout << REQUEST << std::endl;
 		std::cin >> item;
 		ok = (item >= 1) && (item <= cntITEMS);
 	} while (!ok);
 	return item;
 }
+
+//int inputIntValue(const std::string message, const int min, const int max)
 
 char inputTypeOfSearch() {
 	char item;
@@ -200,7 +219,6 @@ int main()
 	int item;
 	Container<Entry> c;
 	Container<Entry> subset;
-	std::fstream f;
 	std::deque<Entry>::iterator it;
 
 	while ((item = inputItem(cntMainMenuITEMS, mainMENU)) != cntMainMenuITEMS)
@@ -226,6 +244,11 @@ int main()
 			}
 			break;
 		case 4: //edit
+			subset = find(c);
+			if (outputRes(subset)) {
+				int i = inputItem(subset.c.size(), editREQUEST);
+				c.edit(subset.c[i]);
+			}
 			break;
 		case 5: //console output
 			c.outputToConsole();
@@ -233,12 +256,11 @@ int main()
 		case 6: //save to file
 			std::cout << "Enter name of file: ";
 			std::cin >> fileName;
-			f.open(fileName);
-			c.saveToFile(f);
-			f.close();
+			if (!c.saveToFile(fileName))
+				std::cout << "Error of opening file." << std::endl;
 			break;
 		case 7: //calc average mark
-			switch (inputItem(cntMarkCritITEMS, critForMarkMENU)) {
+			switch (inputItem(cntMarkCritITEMS, critForAvrMarkMENU)) {
 			case 1: //group
 				c.calcAverageMark(group, inputQuery());
 				break;

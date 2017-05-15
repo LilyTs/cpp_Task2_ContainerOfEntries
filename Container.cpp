@@ -2,10 +2,12 @@
 #include "string"
 #include "Container.h"
 #include "Entry.h"
+#include "Comparators.h"
 
 
 Container<Entry>::Container()
 {
+	c = std::deque<Entry>();
 }
 
 
@@ -13,26 +15,13 @@ Container<Entry>::~Container()
 {
 }
 
-/*cIterator findFirst(const fieldName crit, const std::string query) const {
-	
-}*/
-
 bool Container<Entry>::add(const Entry &en) {
-	if(std::find(c.begin(), c.end(), en) == c.end())
-		c.push_back(en);
-}
-
-/*cIterator find(const fieldName crit, const std::string query) const {
-	switch (crit) {
-	case group:
-		break;
-	case course:
-		break;
-	case surname:
-		break;
-
+	if (std::find(c.begin(), c.end(), en) == c.end()) {
+	c.push_back(en); 
+		return true;
 	}
-}*/
+	return false;
+}
 
 Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std::string query) const {
 	Container res;
@@ -70,43 +59,55 @@ Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std
 
 Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std::string query) {
 	Container<Entry> res;
-	cIterator it;
+	std::deque<Entry>::iterator it;
+	Entry en;
+	cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
 	switch (crit) {
 	case group:
-		std::sort(c.begin(), c.end(), Entry::cmpGroup);
-		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpGroup);
+		cmpGroup cmpGr = cmpGroup();
+		std::sort(c.begin(), c.end(), cmpGr);
+		en = Entry(0, "", 0, query, "", 0);
+		it = std::lower_bound(c.begin(), c.end(), en, cmpGr);
 		while (it != c.end() && it->getGroup() == query) {
 			res.c.push_back(*it);
 			++it;
 		}
 		break;
 	case surname:
-		std::sort(c.begin(), c.end(), Entry::cmpSurname);
-		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpSurname);
+		cmpSurname cmpSrn = cmpSurname();
+		std::sort(c.begin(), c.end(), cmpSrn);
+		en = Entry(0, query, 0, "", "", 0);
+		it = std::lower_bound(c.begin(), c.end(), en, cmpSrn);
 		while (it != c.end() && it->getSurname() == query) {
 			res.c.push_back(*it);
 			++it;
 		}
 		break;
 	case course:
-		std::sort(c.begin(), c.end(), Entry::cmpCourse);
-		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpCourse);
+		cmpCourse cmpCrs = cmpCourse();
+		std::sort(c.begin(), c.end(), cmpCrs);
+		en = Entry(0, "", stoi(query), query, "", 0);
+		it = std::lower_bound(c.begin(), c.end(), en, cmpCrs);
 		while (it != c.end() && it->getCourse() == stoi(query)) {
 			res.c.push_back(*it);
 			++it;
 		}
 		break;
 	case numRecBook:
-		std::sort(c.begin(), c.end(), Entry::cmpNumRecBook);
-		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpGroup);
+		//cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
+		std::sort(c.begin(), c.end(), cmpN);
+		en = Entry(stoi(query), "", 0, query, "", 0);
+		it = std::lower_bound(c.begin(), c.end(), en, cmpN);
 		while (it != c.end() && it->getNumOfRecordBook() == stoi(query)) {
 			res.c.push_back(*it);
 			++it;
 		}
 		break;
 	case mark:
-		std::sort(c.begin(), c.end(), Entry::cmpMark);
-		it = std::lower_bound(c.begin(), c.end(), c, Entry::cmpMark);
+		cmpMark cmpM = cmpMark();
+		std::sort(c.begin(), c.end(), cmpM);
+		en = Entry(0, "", 0, query, "", stoi(query));
+		it = std::lower_bound(c.begin(), c.end(), en, cmpM);
 		while (it != c.end() && it->getMark() == stoi(query)) {
 			res.c.push_back(*it);
 			++it;
@@ -126,20 +127,28 @@ void Container<Entry>::outputToConsole()  const {
 	}
 }
 
-bool Container<Entry>::saveToFile(std::fstream &f) const {
-	for each(Entry entry in c) {
-		f << entry.toString();
+bool Container<Entry>::saveToFile(const std::string fileName) const {
+	std::fstream f;
+	f.open(fileName);
+	if (f.is_open()) {
+		for each(Entry entry in c) {
+			f << entry.toString();
+		}
+		f.close();
+		return true;
 	}
+	return false;
 }
 
 void Container<Entry>::edit(Entry &en) {
-	cIterator it = find(c.begin(), c.end(), en);
-
+	std::deque<Entry>::iterator it = find(c.begin(), c.end(), en);
+	en.edit();
 }
 
 double Container<Entry>::calcAverageMark(const fieldName crit, const std::string query) const {
 	int sum = 0;
 	int count = 0;
+	int intVal;
 	switch(crit){
 	case group:
 		for each(Entry en in c) {
@@ -150,9 +159,9 @@ double Container<Entry>::calcAverageMark(const fieldName crit, const std::string
 		}
 		break;
 	case course:
-		int valCourse = stoi(query);
+		intVal = stoi(query);
 		for each(Entry en in c) {
-			if (en.getCourse() == valCourse) {
+			if (en.getCourse() == intVal) {
 				sum += en.getMark();
 				++count;
 			}

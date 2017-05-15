@@ -17,14 +17,9 @@ public:
 	~Entry();
 	std::string toString();
 	std::ostream& operator<<(std::ostream &os);
-	bool operator==(const Entry &en);
-	//компараторы, обеспечивающие сравнение записей журнала по различным полям
-	bool cmpSurname(const Entry &en1, const Entry &en2);
-	bool cmpCourse(const Entry &en1, const Entry &en2);
-	bool cmpGroup(const Entry&en1, const Entry &en2);
-	bool cmpNumRecBook(const Entry &en1, const Entry &en2);
-	bool cmpMark(const Entry &en1, const Entry &en2);
-
+	bool operator==(const Entry &en) const;
+	bool operator!=(const Entry &en) const;
+	void edit();
 	const int getNumOfRecordBook() const;
 	const std::string getSurname() const;
 	const int getCourse() const;
