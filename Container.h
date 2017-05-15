@@ -17,6 +17,7 @@ public:
 	void remove(Entry &en);
 	void outputToConsole() const;
 	bool saveToFile(std::string fileName) const;
+	bool loadFromfile(std::string fileName);
 	void edit(Entry &en);
 	double calcAverageMark(fieldName crit, const std::string query) const;
 };

@@ -128,11 +128,30 @@ void Container<Entry>::outputToConsole()  const {
 }
 
 bool Container<Entry>::saveToFile(const std::string fileName) const {
-	std::fstream f;
-	f.open(fileName);
+	std::fstream f(fileName, std::ios::out);
 	if (f.is_open()) {
-		for each(Entry entry in c) {
-			f << entry.toString();
+		copy(c.begin(), c.end(), std::ostream_iterator<Entry>(f, "\n"));
+		f.close();
+		return true;
+	}
+	return false;
+}
+
+bool Container<Entry>::loadFromfile(const std::string fileName) {
+	std::fstream f(fileName, std::ios::in);
+	if (f.is_open()) {
+		std::istream_iterator<Entry> is(f);
+		c.clear();
+		++is;  //skip title
+		Entry en = *is;
+		add(en);
+		while (!f.fail() && !f.eof()) {
+			try {
+				++is;
+				en = *is;
+				add(en);
+			}
+			catch (std::exception) {};
 		}
 		f.close();
 		return true;
