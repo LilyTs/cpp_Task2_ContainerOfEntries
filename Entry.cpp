@@ -29,6 +29,35 @@ std::ostream& Entry::operator<<(std::ostream &os) {
 	return os;
 }
 
+std::string Entry::skipFieldsNames(std::istream &is) const {
+	std::string str;
+
+	is >> str;
+	while ((str.find(":") != -1) || str == "\t" || str == "\n" || str == " ")
+	{
+		is >> str;
+	}
+
+	return str;
+}
+
+std::istream& Entry::operator>>(std::istream &is) {
+	std::string str;
+
+	try {
+		setNumOfRecordBook(stoi(skipFieldsNames(is)));
+		setSurname(skipFieldsNames(is));
+		setCourse(stoi(skipFieldsNames(is)));
+		setGroup(skipFieldsNames(is));
+		setDiscipline(skipFieldsNames(is));
+		setMark(stoi(skipFieldsNames(is)));
+	}
+	catch (const std::exception &e) {
+	}
+
+	return is;
+}
+
 bool Entry::operator==(const Entry &en) const {
 	return
 		this->numOfRecordBook == en.getNumOfRecordBook() &&
