@@ -2,6 +2,7 @@
 #include "string"
 #include "Container.h"
 #include "Entry.h"
+#include "HelpUtils.h"
 #include "Comparators.h"
 
 
@@ -135,18 +136,17 @@ bool Container<Entry>::saveToFile(const std::string fileName) const {
 	}
 	return false;
 }
-/*
+
 bool Container<Entry>::loadFromFile(const std::string fileName) {
 	std::fstream f(fileName, std::ios::in);
 	if (f.is_open()) {
 		std::istream_iterator<Entry> is(f);
 		c.clear();
-		++is;  //skip title
 		Entry en = *is;
 		add(en);
 		while (!f.fail() && !f.eof()) {
 			try {
-				++is;
+				is++;
 				en = *is;
 				add(en);
 			}
@@ -156,7 +156,7 @@ bool Container<Entry>::loadFromFile(const std::string fileName) {
 		return true;
 	}
 	return false;
-}*/
+}
 
 void Container<Entry>::edit(Entry &en) {
 	std::deque<Entry>::iterator it = find(c.begin(), c.end(), en);
@@ -168,6 +168,7 @@ double Container<Entry>::calcAverageMark(const fieldName crit, const std::string
 	int count = 0;
 	double res = 0;
 	int intVal;
+
 	switch(crit){
 	case group:
 		for each(Entry en in c) {
@@ -195,8 +196,9 @@ double Container<Entry>::calcAverageMark(const fieldName crit, const std::string
 		}
 		break;
 	}
+
 	if(count != 0)
-		res = (double)sum / (double)count;
+		res = (double)sum / count;
 	return res;
 }
 

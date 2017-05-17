@@ -16,15 +16,11 @@
 #include "stdafx.h"
 #include "Container.h"
 #include "Entry.h"
-#include "UInterface.h"
-
-void showTitle() {
-	std::cout << "Number of record book  " << "Surname  " << "Course  " << "Group  " << "Discipline  " << "  Mark" << std::endl;
-}
+#include "HelpUtils.h"
 
 int inputIntValue() {
 	std::string str;
-	int res;
+	int res = -1;
 
 	try {
 		std::cin >> str;
@@ -32,7 +28,7 @@ int inputIntValue() {
 	}
 	catch (std::exception) {
 		std::cout << " Input error.\n Repeat: " << std::endl;
-		//res = inputIntValue();
+		std::cin >> str;
 	}
 
 	return res;
@@ -51,15 +47,12 @@ Entry& inputEntry(Entry &en) {
 	numRecBook = inputIntValue();
 	std::cout << "  Surname: ";
 	std::cin >> surname;
-	//std::getline(std::cin, surname);
 	std::cout << "  Course: ";
 	course = inputIntValue();
 	std::cout << "  Group: ";
 	std::cin >> group;
-	//std::getline(std::cin, group);
 	std::cout << "  Discipline: ";
 	std::cin >> discipline;
-	//std::getline(std::cin, discipline);
 	std::cout << "  Mark: ";
 	mark = inputIntValue();
 	en = Entry(numRecBook, surname, course, group, discipline, mark);
@@ -79,8 +72,8 @@ const int cntMarkCritITEMS = 4;
 const std::string findSUBMENU = "\n1 - remove\n2 - edit\n3 - save to file\n0 - back\n";
 const int cntFindSubmenuITEMS = 4;
 
-const std::string removeREQUEST = "What entry do you want to remove? Enter number: \n";
-const std::string editREQUEST = "What entry do you want to edit? Enter number: \n";
+const std::string removeREQUEST = "What entry do you want to remove? Enter number: ";
+const std::string editREQUEST = "What entry do you want to edit? Enter number: ";
 
 int inputItem(const int cntITEMS, const std::string REQUEST) {
 	int item;
@@ -125,8 +118,8 @@ std::string inputFileName() {
 
 //возвращает истину, если результирующий контейнер был выведен (не пустой)
 bool outputRes(Container<Entry> &res) {
-	showTitle();
 	if (!res.c.empty()) {
+		showTitle();
 		res.outputToConsole();
 		return true;
 	}
@@ -135,6 +128,7 @@ bool outputRes(Container<Entry> &res) {
 	return false;
 }
 
+//возвращает false, если поиск был отменен
 void find(Container<Entry> &c, Container<Entry> &res) {
 	switch (inputTypeOfSearch()) {
 	case 'L':
@@ -155,6 +149,8 @@ void find(Container<Entry> &c, Container<Entry> &res) {
 		case 5:
 			c.linearSearch(mark, inputQuery(), res);
 			break;
+		case 0:
+			throw "back";
 		}
 		break;
 	case 'B':
@@ -175,6 +171,8 @@ void find(Container<Entry> &c, Container<Entry> &res) {
 		case 5:
 			c.binarySearch(mark, inputQuery(), res);
 			break;
+		case 0:
+			throw "back";
 		}
 		break;
 	}
@@ -197,7 +195,7 @@ int main()
 		switch (item)
 		{
 		case 1: //load data
-			//c.loadFromFile(inputFileName());
+			c.loadFromFile(inputFileName());
 			break;
 		case 2: //add
 			if (c.add(inputEntry(en)))
@@ -206,23 +204,26 @@ int main()
 				std::cout << "Such entry already exists." << std::endl;
 			break;
 		case 3: //find
-			find(c, subset);
-			if (outputRes(subset)) {
-				switch (inputItem(cntFindSubmenuITEMS, findSUBMENU)) {
-				case 1: //remove
-					i = inputItem(subset.c.size(), removeREQUEST);
-					c.remove(subset.c[i]);
-					break;
-				case 2: //edit
-					i = inputItem(subset.c.size(), editREQUEST);
-					c.edit(subset.c[i]);
-					break;
-				case 3: //save to file
-					subset.saveToFile(inputFileName());
-					break;
+			try {
+					find(c, subset);
+					if (outputRes(subset)) {
+						switch (inputItem(cntFindSubmenuITEMS, findSUBMENU)) {
+						case 1: //remove
+							i = inputItem(subset.c.size(), removeREQUEST);
+							c.remove(subset.c[i]);
+							break;
+						case 2: //edit
+							i = inputItem(subset.c.size(), editREQUEST);
+							c.edit(subset.c[i]);
+							break;
+						case 3: //save to file
+							subset.saveToFile(inputFileName());
+							break;
+						}
+					}
 				}
-				break;
-			}
+			catch (char* back) { }
+		break;
 		case 4: //console output
 			showTitle();
 			c.outputToConsole();
