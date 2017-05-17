@@ -23,8 +23,7 @@ bool Container<Entry>::add(const Entry &en) {
 	return false;
 }
 
-Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std::string query) const {
-	Container res;
+Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std::string query, Container<Entry> &res) const {
 	switch(crit){
 	case group:
 		for each (Entry en in c)
@@ -57,8 +56,7 @@ Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std
 
 
 
-Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std::string query) {
-	Container<Entry> res;
+Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std::string query, Container<Entry> &res) {
 	std::deque<Entry>::iterator it;
 	Entry en;
 	cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
@@ -136,7 +134,7 @@ bool Container<Entry>::saveToFile(const std::string fileName) const {
 	}
 	return false;
 }
-
+/*
 bool Container<Entry>::loadFromfile(const std::string fileName) {
 	std::fstream f(fileName, std::ios::in);
 	if (f.is_open()) {
@@ -157,7 +155,7 @@ bool Container<Entry>::loadFromfile(const std::string fileName) {
 		return true;
 	}
 	return false;
-}
+}*/
 
 void Container<Entry>::edit(Entry &en) {
 	std::deque<Entry>::iterator it = find(c.begin(), c.end(), en);

@@ -20,42 +20,8 @@ Entry::Entry(int aNumOfRecordBook, std::string aSurname, int aCourse, std::strin
 }
 
 std::string Entry::toString() {
-	return std::to_string(numOfRecordBook) + "\t" + surname + "\t" + std::to_string(course) + "\t" + group + "\t" + discipline
+	return std::to_string(numOfRecordBook) + "\t\t\t" + surname + "\t" + std::to_string(course) + "\t" + group + "\t" + discipline
 		+ "\t" + std::to_string(mark);
-}
-
-std::ostream& Entry::operator<<(std::ostream &os) {
-	os << this->toString();
-	return os;
-}
-
-std::string Entry::skipFieldsNames(std::istream &is) const {
-	std::string str;
-
-	is >> str;
-	while ((str.find(":") != -1) || str == "\t" || str == "\n" || str == " ")
-	{
-		is >> str;
-	}
-
-	return str;
-}
-
-std::istream& Entry::operator>>(std::istream &is) {
-	std::string str;
-
-	try {
-		setNumOfRecordBook(stoi(skipFieldsNames(is)));
-		setSurname(skipFieldsNames(is));
-		setCourse(stoi(skipFieldsNames(is)));
-		setGroup(skipFieldsNames(is));
-		setDiscipline(skipFieldsNames(is));
-		setMark(stoi(skipFieldsNames(is)));
-	}
-	catch (const std::exception &e) {
-	}
-
-	return is;
 }
 
 bool Entry::operator==(const Entry &en) const {
@@ -149,4 +115,43 @@ void Entry::setDiscipline(const std::string value) {
 
 void Entry::setMark(const int value) {
 	mark = value;
+}
+
+std::ostream& operator<<(std::ostream &os, const Entry &en) {
+	os << "Number of record book: " + std::to_string(en.getNumOfRecordBook()) + "\n" +
+		"Surname: " + en.getSurname() + "\n" +
+		"Course: " + std::to_string(en.getCourse()) + "\n" +
+		"Group: " + en.getGroup() + "\n" +
+		"Discipline: " + (en.getDiscipline()) + "\n" +
+		"Mark: " + std::to_string(en.getMark()) + "\n";
+	return os;
+}
+
+std::string skipFieldsNames(std::istream &is) {
+	std::string str;
+
+	is >> str;
+	while ((str.find(":") != -1) || str == "\t" || str == "\n" || str == " ")
+	{
+		is >> str;
+	}
+
+	return str;
+}
+
+std::istream& operator>>(std::istream &is, Entry &en) {
+	std::string str;
+
+	try {
+		en.setNumOfRecordBook(stoi(skipFieldsNames(is)));
+		en.setSurname(skipFieldsNames(is));
+		en.setCourse(stoi(skipFieldsNames(is)));
+		en.setGroup(skipFieldsNames(is));
+		en.setDiscipline(skipFieldsNames(is));
+		en.setMark(stoi(skipFieldsNames(is)));
+	}
+	catch (const std::exception &e) {
+	}
+
+	return is;
 }

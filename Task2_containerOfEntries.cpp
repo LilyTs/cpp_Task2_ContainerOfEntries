@@ -38,7 +38,7 @@ int inputIntValue() {
 	return res;
 }
 
-Entry& inputEntry() {
+Entry& inputEntry(Entry &en) {
 	int numRecBook;
 	std::string surname;
 	int course;
@@ -50,24 +50,24 @@ Entry& inputEntry() {
 	std::cout << "  Number of student's record book: ";
 	numRecBook = inputIntValue();
 	std::cout << "  Surname: ";
-	//std::cin >> surname;
-	std::getline(std::cin, surname);
+	std::cin >> surname;
+	//std::getline(std::cin, surname);
 	std::cout << "  Course: ";
 	course = inputIntValue();
 	std::cout << "  Group: ";
-	//std::cin >> group;
-	std::getline(std::cin, group);
+	std::cin >> group;
+	//std::getline(std::cin, group);
 	std::cout << "  Discipline: ";
-	//std::cin >> discipline;
-	std::getline(std::cin, discipline);
+	std::cin >> discipline;
+	//std::getline(std::cin, discipline);
 	std::cout << "  Mark: ";
 	mark = inputIntValue();
-
-	return Entry(numRecBook, surname, course, group, discipline, mark);
+	en = Entry(numRecBook, surname, course, group, discipline, mark);
+	return en;
 }
 
 //текст менюшек и количества пунктов в них
-const std::string mainMENU = "\n1 - load from file2 - add\n3 - find\n4 - remove\n5 - edit\n6 - output to console\n7 - save to file\n8 - calculate average mark\n8 - exit\n";
+const std::string mainMENU = "\n1 - load from file\n2 - add\n3 - find\n4 - remove\n5 - edit\n6 - output to console\n7 - save to file\n8 - calculate average mark\n8 - exit\n";
 const int cntMainMenuITEMS = 8;
 
 const std::string critForSearchMENU = "\n1 - group\n2 - course\n3 - surname\n4 - number student's record book\n5 - mark\n6 - back";
@@ -118,12 +118,13 @@ std::string inputQuery() {
 //возвращает истину, если результирующий контейнер был выведен
 bool outputRes(Container<Entry> &res) {
 	showTitle();
-	if (!res.c.empty())
+	if (!res.c.empty()) {
 		for each (Entry en in res.c)
 		{
 			std::cout << en.toString() << std::endl;
-			return true;
 		}
+		return true;
+	}
 	else
 		std::cout << "No results" << std::endl;
 	return false;
@@ -135,19 +136,19 @@ void find(Container<Entry> &c, Container<Entry> &res) {
 	case'l':
 		switch (inputItem(cntSearchCritITEMS, critForSearchMENU)) {
 		case 1:
-			res = c.linearSearch(group, inputQuery());
+			c.linearSearch(group, inputQuery(), res);
 			break;
 		case 2:
-			res = c.linearSearch(course, inputQuery());
+			c.linearSearch(course, inputQuery(), res);
 			break;
 		case 3:
-			res = c.linearSearch(surname, inputQuery());
+			c.linearSearch(surname, inputQuery(), res);
 			break;
 		case 4:
-			res = c.linearSearch(numRecBook, inputQuery());
+			c.linearSearch(numRecBook, inputQuery(), res);
 			break;
 		case 5:
-			res = c.linearSearch(mark, inputQuery());
+			c.linearSearch(mark, inputQuery(), res);
 			break;
 		}
 		break;
@@ -155,45 +156,33 @@ void find(Container<Entry> &c, Container<Entry> &res) {
 	case 'b':
 		switch (inputItem(cntSearchCritITEMS, critForSearchMENU)) {
 		case 1:
-			res = c.binarySearch(group, inputQuery());
+			c.binarySearch(group, inputQuery(), res);
 			break;
 		case 2:
-			res = c.binarySearch(course, inputQuery());
+			c.binarySearch(course, inputQuery(), res);
 			break;
 		case 3:
-			res = c.binarySearch(surname, inputQuery());
+			c.binarySearch(surname, inputQuery(), res);
 			break;
 		case 4:
-			res = c.binarySearch(numRecBook, inputQuery());
+			c.binarySearch(numRecBook, inputQuery(), res);
 			break;
 		case 5:
-			res = c.binarySearch(mark, inputQuery());
+			c.binarySearch(mark, inputQuery(), res);
 			break;
 		}
 		break;
 	}
 }
 
-/*void a() { std::cout << "a() done" << std::endl; }
-void b() { std::cout << "b() done" << std::endl; }
-void c() { std::cout << "c() done" << std::endl; }
-void exit() { exit(0); }*/
-
 int main()
 {
-	/*UInterface manager = UInterface();
-	void(*action[])() = { exit, a, b, c };
-	while (true) {
-		manager.mainMenu.display();
-		if (manager.mainMenu.selection())
-			action[manager.mainMenu.opt()]();
-	}*/
-
 	setlocale(LC_ALL, "Russian");
 	int item;
 	Container<Entry> c = Container<Entry>();
 	Container<Entry> subset = Container<Entry>();
 	std::deque<Entry>::iterator it;
+	Entry en;
 
 	while ((item = inputItem(cntMainMenuITEMS, mainMENU)) != cntMainMenuITEMS)
 	{
@@ -204,10 +193,10 @@ int main()
 		case 1:
 			std::cout << "Enter name of file: ";
 			std::cin >> fileName;
-			c.loadFromfile(fileName);
+			//c.loadFromfile(fileName);
 			break;
 		case 2: //add
-			if (c.add(inputEntry()))
+			if (c.add(inputEntry(en)))
 				std::cout << "Entry has been added." << std::endl;
 			else
 				std::cout << "Such entry already exists." << std::endl;

@@ -11,14 +11,11 @@ private:
 	std::string group;
 	std::string  discipline;
 	int mark;
-	std::string skipFieldsNames(std::istream &is) const;
 public:
 	Entry();
 	Entry(int aNumOfRecordBook, std::string aSurname, int aCourse, std::string aGroup, std::string  aDiscipline, int aMark);
 	~Entry();
 	std::string toString();
-	std::ostream& operator<<(std::ostream &os);
-	std::istream& operator>>(std::istream &is);
 	bool operator==(const Entry &en) const;
 	bool operator!=(const Entry &en) const;
 	void edit();
@@ -37,3 +34,6 @@ public:
 	void setMark(const int value);
 };
 
+std::ostream& operator<<(std::ostream &os, const Entry &en);
+std::istream& operator>>(std::istream &is, Entry en);
+std::string skipFieldsNames(std::istream &is);
