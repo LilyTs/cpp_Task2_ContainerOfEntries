@@ -19,7 +19,7 @@
 #include "UInterface.h"
 
 void showTitle() {
-	std::cout << "Number of record book  " << "Surname  " << "Course  " << "Group  " << "Discipline  " << "Mark" << std::endl;
+	std::cout << "Number of record book  " << "Surname  " << "Course  " << "Group  " << "Discipline  " << "  Mark" << std::endl;
 }
 
 int inputIntValue() {
@@ -67,14 +67,17 @@ Entry& inputEntry(Entry &en) {
 }
 
 //текст менюшек и количества пунктов в них
-const std::string mainMENU = "\n1 - load from file\n2 - add\n3 - find\n4 - remove\n5 - edit\n6 - output to console\n7 - save to file\n8 - calculate average mark\n8 - exit\n";
-const int cntMainMenuITEMS = 8;
+const std::string mainMENU = "\n1 - load from file\n2 - add\n3 - find\n4 - output to console\n5 - save to file\n6 - calculate average mark\n0 - exit\n";
+const int cntMainMenuITEMS = 7;
 
-const std::string critForSearchMENU = "\n1 - group\n2 - course\n3 - surname\n4 - number student's record book\n5 - mark\n6 - back";
-const int cntSearchCritITEMS = 5;
+const std::string critForSearchMENU = "\n1 - group\n2 - course\n3 - surname\n4 - number student's record book\n5 - mark\n0 - back\n";
+const int cntSearchCritITEMS = 6;
 
-const std::string critForAvrMarkMENU = "\n1 - group\n2 - course\n3 - discipline\n4 - back";
-const int cntMarkCritITEMS = 3;
+const std::string critForAvrMarkMENU = "\n1 - group\n2 - course\n3 - discipline\n0 - back\n";
+const int cntMarkCritITEMS = 4;
+
+const std::string findSUBMENU = "\n1 - remove\n2 - edit\n3 - save to file\n0 - back\n";
+const int cntFindSubmenuITEMS = 4;
 
 const std::string removeREQUEST = "What entry do you want to remove? Enter number: \n";
 const std::string editREQUEST = "What entry do you want to edit? Enter number: \n";
@@ -85,14 +88,12 @@ int inputItem(const int cntITEMS, const std::string REQUEST) {
 	do {
 		std::cout << REQUEST << std::endl;
 		std::cin >> item;
-		ok = (item >= 1) && (item <= cntITEMS);
+		ok = (item >= 0) && (item <= cntITEMS - 1);
 		if (!ok)
 			std::cout << "Incorrect input data." << std::endl;
 	} while (!ok);
 	return item;
 }
-
-//int inputIntValue(const std::string message, const int min, const int max)
 
 char inputTypeOfSearch() {
 	char item;
@@ -115,14 +116,18 @@ std::string inputQuery() {
 	return /*boost::algorithm::trim()*/query;
 }
 
-//возвращает истину, если результирующий контейнер был выведен
+std::string inputFileName() {
+	std::string fileName;
+	std::cout << "Enter name of file: ";
+	std::cin >> fileName;
+	return fileName;
+}
+
+//возвращает истину, если результирующий контейнер был выведен (не пустой)
 bool outputRes(Container<Entry> &res) {
 	showTitle();
 	if (!res.c.empty()) {
-		for each (Entry en in res.c)
-		{
-			std::cout << en.toString() << std::endl;
-		}
+		res.outputToConsole();
 		return true;
 	}
 	else
@@ -178,11 +183,12 @@ void find(Container<Entry> &c, Container<Entry> &res) {
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	int item;
+	int item, i;
 	Container<Entry> c = Container<Entry>();
 	Container<Entry> subset = Container<Entry>();
 	std::deque<Entry>::iterator it;
 	Entry en;
+	double m = 0;
 
 	while ((item = inputItem(cntMainMenuITEMS, mainMENU)) != cntMainMenuITEMS)
 	{
@@ -190,10 +196,8 @@ int main()
 
 		switch (item)
 		{
-		case 1:
-			std::cout << "Enter name of file: ";
-			std::cin >> fileName;
-			//c.loadFromfile(fileName);
+		case 1: //load data
+			//c.loadFromFile(inputFileName());
 			break;
 		case 2: //add
 			if (c.add(inputEntry(en)))
@@ -203,45 +207,49 @@ int main()
 			break;
 		case 3: //find
 			find(c, subset);
-			outputRes(subset);
-			break;
-		case 4: //remove
-			find(c, subset);
 			if (outputRes(subset)) {
-				int i = inputItem(subset.c.size(), removeREQUEST);
-				c.remove(subset.c[i]);
+				switch (inputItem(cntFindSubmenuITEMS, findSUBMENU)) {
+				case 1: //remove
+					i = inputItem(subset.c.size(), removeREQUEST);
+					c.remove(subset.c[i]);
+					break;
+				case 2: //edit
+					i = inputItem(subset.c.size(), editREQUEST);
+					c.edit(subset.c[i]);
+					break;
+				case 3: //save to file
+					subset.saveToFile(inputFileName());
+					break;
+				}
+				break;
 			}
-			break;
-		case 5: //edit
-			find(c, subset);
-			if (outputRes(subset)) {
-				int i = inputItem(subset.c.size(), editREQUEST);
-				c.edit(subset.c[i]);
-			}
-			break;
-		case 6: //console output
+		case 4: //console output
 			showTitle();
 			c.outputToConsole();
 			break;
-		case 7: //save to file
-			std::cout << "Enter name of file: ";
-			std::cin >> fileName;
-			if (!c.saveToFile(fileName))
+		case 5: //save to file
+			if (!c.saveToFile(inputFileName()))
 				std::cout << "Error of opening file." << std::endl;
 			break;
-		case 8: //calc average mark
+		case 6: //calc average mark
 			switch (inputItem(cntMarkCritITEMS, critForAvrMarkMENU)) {
 			case 1: //group
-				c.calcAverageMark(group, inputQuery());
+				m = c.calcAverageMark(group, inputQuery());
 				break;
 			case 2: //course
-				c.calcAverageMark(course, inputQuery());
+				m = c.calcAverageMark(course, inputQuery());
 				break;
 			case 3: //discipline
-				c.calcAverageMark(discipline, inputQuery());
+				m = c.calcAverageMark(discipline, inputQuery());
 				break;
 			}
+			if (m != 0)
+				std::cout << "\nAverage mark = " << m << std::endl;
+			else
+				std::cout << "Such entries are not found.";
 			break;
+		case 0:
+			exit(0);
 		}
 	}
     return 0;

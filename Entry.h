@@ -35,5 +35,5 @@ public:
 };
 
 std::ostream& operator<<(std::ostream &os, const Entry &en);
-std::istream& operator>>(std::istream &is, Entry en);
+std::istream& operator>>(std::istream &is, Entry &en);
 std::string skipFieldsNames(std::istream &is);

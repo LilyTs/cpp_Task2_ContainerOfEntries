@@ -24,6 +24,7 @@ bool Container<Entry>::add(const Entry &en) {
 }
 
 Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std::string query, Container<Entry> &res) const {
+	res.c.clear();
 	switch(crit){
 	case group:
 		for each (Entry en in c)
@@ -54,12 +55,11 @@ Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std
 	return res;
 }
 
-
-
 Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std::string query, Container<Entry> &res) {
+	res.c.clear(); 
 	std::deque<Entry>::iterator it;
 	Entry en;
-	cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
+	//cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
 	switch (crit) {
 	case group:
 		cmpGroup cmpGr = cmpGroup();
@@ -92,7 +92,7 @@ Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std
 		}
 		break;
 	case numRecBook:
-		//cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
+		cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
 		std::sort(c.begin(), c.end(), cmpN);
 		en = Entry(stoi(query), "", 0, query, "", 0);
 		it = std::lower_bound(c.begin(), c.end(), en, cmpN);
@@ -115,8 +115,9 @@ Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std
 	return res;
 }
 
-void Container<Entry>::remove(Entry &en) {
-	std::remove(c.begin(), c.end(), en);
+void Container<Entry>::remove(Entry en) {
+	std::deque<Entry>::iterator it = find(c.begin(), c.end(), en);
+	std::remove(c.begin(), c.end(), *it);
 }
 
 void Container<Entry>::outputToConsole()  const {
@@ -135,7 +136,7 @@ bool Container<Entry>::saveToFile(const std::string fileName) const {
 	return false;
 }
 /*
-bool Container<Entry>::loadFromfile(const std::string fileName) {
+bool Container<Entry>::loadFromFile(const std::string fileName) {
 	std::fstream f(fileName, std::ios::in);
 	if (f.is_open()) {
 		std::istream_iterator<Entry> is(f);
@@ -159,12 +160,13 @@ bool Container<Entry>::loadFromfile(const std::string fileName) {
 
 void Container<Entry>::edit(Entry &en) {
 	std::deque<Entry>::iterator it = find(c.begin(), c.end(), en);
-	en.edit();
+	it->edit();
 }
 
 double Container<Entry>::calcAverageMark(const fieldName crit, const std::string query) const {
 	int sum = 0;
 	int count = 0;
+	double res = 0;
 	int intVal;
 	switch(crit){
 	case group:
@@ -193,6 +195,8 @@ double Container<Entry>::calcAverageMark(const fieldName crit, const std::string
 		}
 		break;
 	}
-	return sum / count;
+	if(count != 0)
+		res = (double)sum / (double)count;
+	return res;
 }
 

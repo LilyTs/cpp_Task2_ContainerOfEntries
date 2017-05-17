@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Entry.h"
-
+#include "HelpUtils.h"
 
 Entry::Entry()
 {
@@ -21,7 +21,7 @@ Entry::Entry(int aNumOfRecordBook, std::string aSurname, int aCourse, std::strin
 
 std::string Entry::toString() {
 	return std::to_string(numOfRecordBook) + "\t\t\t" + surname + "\t" + std::to_string(course) + "\t" + group + "\t" + discipline
-		+ "\t" + std::to_string(mark);
+		+ "\t\t" + std::to_string(mark);
 }
 
 bool Entry::operator==(const Entry &en) const {
@@ -39,31 +39,18 @@ bool Entry::operator!=(const Entry &en) const {
 }
 
 void Entry::edit() {
-	std::string s;
-	std::cout << "Number of record book (current value = " << this->getNumOfRecordBook() << "): ";
-	std::cin >> s;
-	if (s != "")
-		this->setNumOfRecordBook(stoi(s));
-	std::cout << "Surname (current value = " << this->getSurname() << "): ";
-	std::cin >> s;
-	if (s != "")
-		this->setSurname(s);
-	std::cout << "Course (current value = " << this->getCourse() << "): ";
-	std::cin >> s;
-	if (s != "")
-		this->setCourse(stoi(s));
-	std::cout << "Group (current value = " << this->getGroup() << "): ";
-	std::cin >> s;
-	if (s != "")
-		this->setGroup(s);
-	std::cout << "Discipline (current value = " << this->getDiscipline() << "): ";
-	std::cin >> s;
-	if (s != "")
-		this->setDiscipline(s);
-	std::cout << "Mark (current value = " << this->getMark() << "): ";
-	std::cin >> s;
-	if (s != "")
-		this->setMark(stoi(s));
+	std::string message = "\nNumber of record book (current value = " + std::to_string(this->getNumOfRecordBook()) + "): ";
+	this->setNumOfRecordBook(inputIntValue(this->getNumOfRecordBook(), message));
+	message = "\nSurname (current value = " + this->getSurname() + "): ";
+	this->setSurname(inputStringValue(this->getSurname(), message));
+	message = "\nCourse (current value = " + std::to_string(this->getCourse()) + "): ";
+	this->setCourse(inputIntValue(this->getNumOfRecordBook(), message, 1, 4));
+	message = "\nGroup (current value = " + this->getGroup() + "): ";
+	this->setGroup(inputStringValue(this->getSurname(), message));
+	message = "\nDiscipline (current value = " + this->getDiscipline() + "): ";
+	this->setDiscipline(inputStringValue(this->getSurname(), message));
+	message = "\nMark (current value = " + std::to_string(this->getMark()) + "): ";
+	this->setMark(inputIntValue(this->getMark(), message, 2, 5));
 }
 
 
@@ -150,7 +137,7 @@ std::istream& operator>>(std::istream &is, Entry &en) {
 		en.setDiscipline(skipFieldsNames(is));
 		en.setMark(stoi(skipFieldsNames(is)));
 	}
-	catch (const std::exception &e) {
+	catch (const std::exception) {
 	}
 
 	return is;
