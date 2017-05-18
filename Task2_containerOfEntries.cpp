@@ -18,22 +18,6 @@
 #include "Entry.h"
 #include "HelpUtils.h"
 
-int inputIntValue() {
-	std::string str;
-	int res = -1;
-
-	try {
-		std::cin >> str;
-		res = stoi(str);
-	}
-	catch (std::exception) {
-		std::cout << " Input error.\n Repeat: " << std::endl;
-		std::cin >> str;
-	}
-
-	return res;
-}
-
 Entry& inputEntry(Entry &en) {
 	int numRecBook;
 	std::string surname;
@@ -41,20 +25,21 @@ Entry& inputEntry(Entry &en) {
 	std::string group;
 	std::string discipline;
 	int mark;
-	std::string str;
+	std::string msg;
 
-	std::cout << "  Number of student's record book: ";
-	numRecBook = inputIntValue();
+	msg = "  Number of student's record book: ";
+	numRecBook = inputIntValue(msg);
 	std::cout << "  Surname: ";
 	std::cin >> surname;
-	std::cout << "  Course: ";
-	course = inputIntValue();
+	msg = "  Course: ";
+	course = inputIntValue(msg, 1, 4);
 	std::cout << "  Group: ";
 	std::cin >> group;
 	std::cout << "  Discipline: ";
 	std::cin >> discipline;
-	std::cout << "  Mark: ";
-	mark = inputIntValue();
+	msg = "  Mark: ";
+	mark = inputIntValue(msg, 2, 5);
+
 	en = Entry(numRecBook, surname, course, group, discipline, mark);
 	return en;
 }
@@ -69,7 +54,7 @@ const int cntSearchCritITEMS = 6;
 const std::string critForAvrMarkMENU = "\n1 - group\n2 - course\n3 - discipline\n0 - back\n";
 const int cntMarkCritITEMS = 4;
 
-const std::string findSUBMENU = "\n1 - remove\n2 - edit\n3 - save to file\n0 - back\n";
+const std::string findSUBMENU = "1 - remove\n2 - edit\n3 - save to file\n0 - back\n";
 const int cntFindSubmenuITEMS = 4;
 
 const std::string removeREQUEST = "What entry do you want to remove? Enter number: ";
@@ -85,6 +70,7 @@ int inputItem(const int cntITEMS, const std::string REQUEST) {
 		if (!ok)
 			std::cout << "Incorrect input data." << std::endl;
 	} while (!ok);
+	std::cout << std::endl;
 	return item;
 }
 
@@ -105,6 +91,7 @@ std::string inputQuery() {
 	do {
 		std::cout << "Enter the required field value: ";
 		std::cin >> query;
+		std::cout << std::endl;
 	} while (query == "");
 	return /*boost::algorithm::trim()*/query;
 }
@@ -119,12 +106,12 @@ std::string inputFileName() {
 //возвращает истину, если результирующий контейнер был выведен (не пустой)
 bool outputRes(Container<Entry> &res) {
 	if (!res.c.empty()) {
-		showTitle();
+		std::cout << "Search results:\n\n";
 		res.outputToConsole();
 		return true;
 	}
 	else
-		std::cout << "No results" << std::endl;
+		std::cout << "\nNo results" << std::endl;
 	return false;
 }
 
@@ -133,6 +120,7 @@ void find(Container<Entry> &c, Container<Entry> &res) {
 	switch (inputTypeOfSearch()) {
 	case 'L':
 	case'l':
+		std::cout << "Select criterion of search:\n\n";
 		switch (inputItem(cntSearchCritITEMS, critForSearchMENU)) {
 		case 1:
 			c.linearSearch(group, inputQuery(), res);
@@ -181,7 +169,8 @@ void find(Container<Entry> &c, Container<Entry> &res) {
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-	int item, i;
+	int item, sz;
+	int i = 0;
 	Container<Entry> c = Container<Entry>();
 	Container<Entry> subset = Container<Entry>();
 	std::deque<Entry>::iterator it;
@@ -206,14 +195,19 @@ int main()
 		case 3: //find
 			try {
 					find(c, subset);
+					sz = subset.c.size();
 					if (outputRes(subset)) {
+						std::cout << "Select action: \n";
 						switch (inputItem(cntFindSubmenuITEMS, findSUBMENU)) {
 						case 1: //remove
-							i = inputItem(subset.c.size(), removeREQUEST);
+							if (sz > 1)
+								i = inputItem(subset.c.size(), removeREQUEST);
 							c.remove(subset.c[i]);
 							break;
 						case 2: //edit
-							i = inputItem(subset.c.size(), editREQUEST);
+							if (sz > 1)
+								i = inputItem(subset.c.size(), editREQUEST);
+							std::cout << "(Press Enter to skip input of a new value)" << std::endl;
 							c.edit(subset.c[i]);
 							break;
 						case 3: //save to file
@@ -225,7 +219,6 @@ int main()
 			catch (char* back) { }
 		break;
 		case 4: //console output
-			showTitle();
 			c.outputToConsole();
 			break;
 		case 5: //save to file

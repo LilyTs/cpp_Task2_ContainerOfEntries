@@ -41,14 +41,19 @@ bool Entry::operator!=(const Entry &en) const {
 void Entry::edit() {
 	std::string msg = "\nNumber of record book (current value = " + std::to_string(this->getNumOfRecordBook()) + "): ";
 	this->setNumOfRecordBook(inputIntValue(this->getNumOfRecordBook(), msg));
+
 	msg = "\nSurname (current value = " + this->getSurname() + "): ";
 	this->setSurname(inputStringValue(this->getSurname(), msg));
+
 	msg = "\nCourse (current value = " + std::to_string(this->getCourse()) + "): ";
 	this->setCourse(inputIntValue(this->getNumOfRecordBook(), msg, 1, 4));
+
 	msg = "\nGroup (current value = " + this->getGroup() + "): ";
 	this->setGroup(inputStringValue(this->getSurname(), msg));
+
 	msg = "\nDiscipline (current value = " + this->getDiscipline() + "): ";
 	this->setDiscipline(inputStringValue(this->getSurname(), msg));
+
 	msg = "\nMark (current value = " + std::to_string(this->getMark()) + "): ";
 	this->setMark(inputIntValue(this->getMark(), msg, 2, 5));
 }

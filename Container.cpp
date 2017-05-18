@@ -118,13 +118,11 @@ Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std
 
 void Container<Entry>::remove(Entry en) {
 	std::deque<Entry>::iterator it = find(c.begin(), c.end(), en);
-	std::remove(c.begin(), c.end(), *it);
+	c.erase(it);
 }
 
 void Container<Entry>::outputToConsole()  const {
-	for each(Entry entry in c) {
-		std::cout << entry.toString() << "\n";
-	}
+	copy(c.begin(), c.end(), std::ostream_iterator<Entry>(std::cout, "\n"));
 }
 
 bool Container<Entry>::saveToFile(const std::string fileName) const {
@@ -141,13 +139,13 @@ bool Container<Entry>::loadFromFile(const std::string fileName) {
 	std::fstream f(fileName, std::ios::in);
 	if (f.is_open()) {
 		std::istream_iterator<Entry> is(f);
-		c.clear();
-		Entry en = *is;
-		add(en);
+		c.clear(); 
+		is++;
+		is++;
 		while (!f.fail() && !f.eof()) {
 			try {
 				is++;
-				en = *is;
+				Entry en = *is;
 				add(en);
 			}
 			catch (std::exception) {};
