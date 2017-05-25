@@ -10,7 +10,7 @@ public:
 	~Container();
 	bool add(const Entry &en);
 	Container<Entry>& linearSearch(const fieldName crit, const std::string query, Container<Entry> &res) const;
-	Container<Entry>& binarySearch(const fieldName crit, const std::string query, Container<Entry> &res);
+	Container<Entry>& binarySearch(const fieldName crit, std::string query, Container<Entry> &res);
 	void remove(Entry en);
 	void outputToConsole() const;
 	bool saveToFile(std::string fileName) const;

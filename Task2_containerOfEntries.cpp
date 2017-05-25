@@ -14,6 +14,7 @@
  */
 
 #include "stdafx.h"
+#include <conio.h>
 #include "Container.h"
 #include "Entry.h"
 #include "HelpUtils.h"
@@ -48,7 +49,7 @@ Entry& inputEntry(Entry &en) {
 const std::string mainMENU = "\n1 - load from file\n2 - add\n3 - find\n4 - output to console\n5 - save to file\n6 - calculate average mark\n0 - exit\n";
 const int cntMainMenuITEMS = 7;
 
-const std::string critForSearchMENU = "\n1 - group\n2 - course\n3 - surname\n4 - number student's record book\n5 - mark\n0 - back\n";
+const std::string critForSearchMENU = "\n1 - group\n2 - course\n3 - surname\n4 - number of record book\n5 - mark\n0 - back\n";
 const int cntSearchCritITEMS = 6;
 
 const std::string critForAvrMarkMENU = "\n1 - group\n2 - course\n3 - discipline\n0 - back\n";
@@ -75,12 +76,14 @@ int inputItem(const int cntITEMS, const std::string REQUEST) {
 }
 
 char inputTypeOfSearch() {
-	char item;
+	char item = 0;
+	std::cout << "Linear(L) or binary(B) search? Enter letter: ";
 	bool ok;
 	do {
-		std::cout << "Linear(L) or binary(B) search? Enter letter: ";
-		std::cin >> item;
+		item = _getche();
 		ok = (item == 'L') || (item == 'l') || (item == 'B') || (item == 'b');
+		if (!ok)
+			std::cout << "Input error! Repeat:" << std::endl;
 	} while (!ok);
 	return item;
 }
@@ -93,7 +96,7 @@ std::string inputQuery() {
 		std::cin >> query;
 		std::cout << std::endl;
 	} while (query == "");
-	return /*boost::algorithm::trim()*/query;
+	return query;
 }
 
 std::string inputFileName() {
@@ -119,8 +122,8 @@ bool outputRes(Container<Entry> &res) {
 void find(Container<Entry> &c, Container<Entry> &res) {
 	switch (inputTypeOfSearch()) {
 	case 'L':
-	case'l':
-		std::cout << "Select criterion of search:\n\n";
+	case 'l':
+		std::cout << "\n\nSelect criterion of search:\n\n";
 		switch (inputItem(cntSearchCritITEMS, critForSearchMENU)) {
 		case 1:
 			c.linearSearch(group, inputQuery(), res);

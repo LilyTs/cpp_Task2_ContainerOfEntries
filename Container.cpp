@@ -56,11 +56,25 @@ Container<Entry>& Container<Entry>::linearSearch(const fieldName crit, const std
 	return res;
 }
 
-Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std::string query, Container<Entry> &res) {
-	res.c.clear(); 
+//результат != -1
+int convertToInt(std::string str) {
+	int res = -1;
+	while (res == -1) {
+		try {
+			res = stoi(str);
+		}
+		catch (std::exception) {
+			std::cout << "Input error! Repeat:" << std::endl;
+			std::cin >> str;
+		}
+	}
+	return res;
+}
+
+Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, std::string query, Container<Entry> &res) {
 	std::deque<Entry>::iterator it;
 	Entry en;
-	//cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
+	res.c.clear();
 	switch (crit) {
 	case group:
 		cmpGroup cmpGr = cmpGroup();
@@ -85,7 +99,7 @@ Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std
 	case course:
 		cmpCourse cmpCrs = cmpCourse();
 		std::sort(c.begin(), c.end(), cmpCrs);
-		en = Entry(0, "", stoi(query), query, "", 0);
+		en = Entry(0, "", convertToInt(query), "", "", 0);
 		it = std::lower_bound(c.begin(), c.end(), en, cmpCrs);
 		while (it != c.end() && it->getCourse() == stoi(query)) {
 			res.c.push_back(*it);
@@ -95,7 +109,7 @@ Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std
 	case numRecBook:
 		cmpNumOfRecordBook cmpN = cmpNumOfRecordBook();
 		std::sort(c.begin(), c.end(), cmpN);
-		en = Entry(stoi(query), "", 0, query, "", 0);
+		en = Entry(convertToInt(query), "", 0, "", "", 0);
 		it = std::lower_bound(c.begin(), c.end(), en, cmpN);
 		while (it != c.end() && it->getNumOfRecordBook() == stoi(query)) {
 			res.c.push_back(*it);
@@ -105,7 +119,7 @@ Container<Entry>& Container<Entry>::binarySearch(const fieldName crit, const std
 	case mark:
 		cmpMark cmpM = cmpMark();
 		std::sort(c.begin(), c.end(), cmpM);
-		en = Entry(0, "", 0, query, "", stoi(query));
+		en = Entry(0, "", 0, "", "", convertToInt(query));
 		it = std::lower_bound(c.begin(), c.end(), en, cmpM);
 		while (it != c.end() && it->getMark() == stoi(query)) {
 			res.c.push_back(*it);
@@ -177,7 +191,7 @@ double Container<Entry>::calcAverageMark(const fieldName crit, const std::string
 		}
 		break;
 	case course:
-		intVal = stoi(query);
+		intVal = convertToInt(query);
 		for each(Entry en in c) {
 			if (en.getCourse() == intVal) {
 				sum += en.getMark();
