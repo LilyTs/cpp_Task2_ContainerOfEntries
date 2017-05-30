@@ -145,21 +145,29 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CalculatorsAvrMark.h" />
+    <ClInclude Include="Collectors.h" />
     <ClInclude Include="Comparators.h" />
     <ClInclude Include="Container.h" />
+    <ClInclude Include="MyContainer.h" />
     <ClInclude Include="Entry.h" />
     <ClInclude Include="HelpUtils.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="Predicates.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CalculatorsAvrMark.cpp" />
+    <ClCompile Include="Collectors.cpp" />
     <ClCompile Include="Comparators.cpp" />
     <ClCompile Include="Container.cpp" />
+    <ClCompile Include="MyContainer.cpp" />
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="HelpUtils.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="Predicates.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

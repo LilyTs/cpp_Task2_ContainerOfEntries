@@ -16,6 +16,4 @@
 #include <algorithm>
 #include <fstream>
 
-enum fieldName{group, course, surname, numRecBook, discipline, mark};
-
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы

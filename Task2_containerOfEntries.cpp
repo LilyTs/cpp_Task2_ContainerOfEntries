@@ -13,9 +13,12 @@
  *  по номеру зачетной книжки, по фамилии, по оценкам.
  */
 
+/*Общий класс Контейнер и специализированный класс MyContainer.
+В контейнере вывод на консоль получает поток, файловый ввод/вывод получает поток*/
+
 #include "stdafx.h"
 #include <conio.h>
-#include "Container.h"
+#include "MyContainer.h"
 #include "Entry.h"
 #include "HelpUtils.h"
 
@@ -107,8 +110,8 @@ std::string inputFileName() {
 }
 
 //возвращает истину, если результирующий контейнер был выведен (не пустой)
-bool outputRes(Container<Entry> &res) {
-	if (!res.c.empty()) {
+bool outputRes(MyContainer &res) {
+	if (!res.empty()) {
 		std::cout << "Search results:\n\n";
 		res.outputToConsole();
 		return true;
@@ -118,27 +121,41 @@ bool outputRes(Container<Entry> &res) {
 	return false;
 }
 
-//возвращает false, если поиск был отменен
-void find(Container<Entry> &c, Container<Entry> &res) {
+//результат != -1
+int convertToInt(std::string str) {
+	int res = -1;
+	while (res == -1) {
+		try {
+			res = stoi(str);
+		}
+		catch (std::exception) {
+			std::cout << "Input error! Repeat:" << std::endl;
+			std::cin >> str;
+		}
+	}
+	return res;
+}
+
+MyContainer find(MyContainer &c) {
 	switch (inputTypeOfSearch()) {
 	case 'L':
 	case 'l':
 		std::cout << "\n\nSelect criterion of search:\n\n";
 		switch (inputItem(cntSearchCritITEMS, critForSearchMENU)) {
-		case 1:
-			c.linearSearch(group, inputQuery(), res);
+		case 1: 
+			return c.linSearchByGroup(inputQuery());
 			break;
 		case 2:
-			c.linearSearch(course, inputQuery(), res);
+			return c.linSearchByCourse(convertToInt(inputQuery()));
 			break;
 		case 3:
-			c.linearSearch(surname, inputQuery(), res);
+			return c.linSearchBySurname(inputQuery());
 			break;
 		case 4:
-			c.linearSearch(numRecBook, inputQuery(), res);
+			return c.linSearchByNumOfRecordBook(convertToInt(inputQuery()));
 			break;
 		case 5:
-			c.linearSearch(mark, inputQuery(), res);
+			return c.linSearchByMark(convertToInt(inputQuery()));
 			break;
 		case 0:
 			throw "back";
@@ -148,19 +165,19 @@ void find(Container<Entry> &c, Container<Entry> &res) {
 	case 'b':
 		switch (inputItem(cntSearchCritITEMS, critForSearchMENU)) {
 		case 1:
-			c.binarySearch(group, inputQuery(), res);
+			return c.binSearchByGroup(inputQuery());
 			break;
 		case 2:
-			c.binarySearch(course, inputQuery(), res);
+			return c.binSearchByCourse(convertToInt(inputQuery()));
 			break;
 		case 3:
-			c.binarySearch(surname, inputQuery(), res);
+			return c.binSearchBySurname(inputQuery());
 			break;
 		case 4:
-			c.binarySearch(numRecBook, inputQuery(), res);
+			return c.binSearchByNumOfRecordBook(convertToInt(inputQuery()));
 			break;
 		case 5:
-			c.binarySearch(mark, inputQuery(), res);
+			return c.binSearchByMark(convertToInt(inputQuery()));
 			break;
 		case 0:
 			throw "back";
@@ -174,8 +191,9 @@ int main()
 	setlocale(LC_ALL, "Russian");
 	int item, sz;
 	int i = 0;
-	Container<Entry> c = Container<Entry>();
-	Container<Entry> subset = Container<Entry>();
+	std::fstream f;
+	MyContainer c = MyContainer();
+	MyContainer subset = MyContainer();
 	std::deque<Entry>::iterator it;
 	Entry en;
 	double m = 0;
@@ -187,7 +205,8 @@ int main()
 		switch (item)
 		{
 		case 1: //load data
-			c.loadFromFile(inputFileName());
+			f.open(inputFileName());
+			c.loadFromFile(f);
 			break;
 		case 2: //add
 			if (c.add(inputEntry(en)))
@@ -197,24 +216,25 @@ int main()
 			break;
 		case 3: //find
 			try {
-					find(c, subset);
-					sz = subset.c.size();
+					subset = find(c);
+					sz = subset.getCont().size();
 					if (outputRes(subset)) {
 						std::cout << "Select action: \n";
 						switch (inputItem(cntFindSubmenuITEMS, findSUBMENU)) {
 						case 1: //remove
 							if (sz > 1)
-								i = inputItem(subset.c.size(), removeREQUEST);
-							c.remove(subset.c[i]);
+								i = inputItem(subset.size(), removeREQUEST);
+							c.remove(subset.getCont()[i]);
 							break;
 						case 2: //edit
 							if (sz > 1)
-								i = inputItem(subset.c.size(), editREQUEST);
+								i = inputItem(subset.size(), editREQUEST);
 							std::cout << "(Press Enter to skip input of a new value)" << std::endl;
-							c.edit(subset.c[i]);
+							c.edit(subset.getCont()[i]);
 							break;
 						case 3: //save to file
-							subset.saveToFile(inputFileName());
+							f.open(inputFileName());
+							subset.saveToFile(f);
 							break;
 						}
 					}
@@ -225,19 +245,20 @@ int main()
 			c.outputToConsole();
 			break;
 		case 5: //save to file
-			if (!c.saveToFile(inputFileName()))
+			f.open(inputFileName());
+			if (!c.saveToFile(f))
 				std::cout << "Error of opening file." << std::endl;
 			break;
 		case 6: //calc average mark
 			switch (inputItem(cntMarkCritITEMS, critForAvrMarkMENU)) {
 			case 1: //group
-				m = c.calcAverageMark(group, inputQuery());
+				m = c.calcAverageMarkByGroup(inputQuery());
 				break;
 			case 2: //course
-				m = c.calcAverageMark(course, inputQuery());
+				m = c.calcAverageMarkByCourse(convertToInt(inputQuery()));
 				break;
 			case 3: //discipline
-				m = c.calcAverageMark(discipline, inputQuery());
+				m = c.calcAverageMarkByDiscipline(inputQuery());
 				break;
 			}
 			if (m != 0)
