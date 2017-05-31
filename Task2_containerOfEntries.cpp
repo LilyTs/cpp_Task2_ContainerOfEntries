@@ -109,11 +109,16 @@ std::string inputFileName() {
 	return fileName;
 }
 
+/*
+void outputContainer(MyContainer c) {
+	copy(c.begin(), c.end(), std::ostream_iterator<Entry>(std::cout, "\n"));
+}*/
+
 //возвращает истину, если результирующий контейнер был выведен (не пустой)
 bool outputRes(MyContainer &res) {
 	if (!res.empty()) {
 		std::cout << "Search results:\n\n";
-		res.outputToConsole();
+		res.output(std::cout);
 		return true;
 	}
 	else
@@ -186,6 +191,26 @@ MyContainer find(MyContainer &c) {
 	}
 }
 
+void edit(Entry &en) { 
+	std::string msg = "\nNumber of record book (current value = " + std::to_string(en.getNumOfRecordBook()) + "): ";
+	en.setNumOfRecordBook(inputIntValue(en.getNumOfRecordBook(), msg));
+
+	msg = "\nSurname (current value = " + en.getSurname() + "): ";
+	en.setSurname(inputStringValue(en.getSurname(), msg));
+
+	msg = "\nCourse (current value = " + std::to_string(en.getCourse()) + "): ";
+	en.setCourse(inputIntValue(en.getNumOfRecordBook(), msg, 1, 4));
+
+	msg = "\nGroup (current value = " + en.getGroup() + "): ";
+	en.setGroup(inputStringValue(en.getSurname(), msg));
+
+	msg = "\nDiscipline (current value = " + en.getDiscipline() + "): ";
+	en.setDiscipline(inputStringValue(en.getSurname(), msg));
+
+	msg = "\nMark (current value = " + std::to_string(en.getMark()) + "): ";
+	en.setMark(inputIntValue(en.getMark(), msg, 2, 5));
+}
+
 int main()
 {
 	setlocale(LC_ALL, "Russian");
@@ -196,7 +221,7 @@ int main()
 	MyContainer subset = MyContainer();
 	std::deque<Entry>::iterator it;
 	Entry en;
-	double m = 0;
+	float m = 0;
 
 	while ((item = inputItem(cntMainMenuITEMS, mainMENU)) != cntMainMenuITEMS)
 	{
@@ -205,7 +230,7 @@ int main()
 		switch (item)
 		{
 		case 1: //load data
-			f.open(inputFileName());
+			f.open(inputFileName(), std::fstream::in);
 			c.loadFromFile(f);
 			break;
 		case 2: //add
@@ -217,24 +242,25 @@ int main()
 		case 3: //find
 			try {
 					subset = find(c);
-					sz = subset.getCont().size();
+					sz = subset.size();
 					if (outputRes(subset)) {
 						std::cout << "Select action: \n";
 						switch (inputItem(cntFindSubmenuITEMS, findSUBMENU)) {
 						case 1: //remove
-							if (sz > 1)
+							if (sz > 1) 
 								i = inputItem(subset.size(), removeREQUEST);
-							c.remove(subset.getCont()[i]);
+							c.remove(subset[i]);
 							break;
 						case 2: //edit
 							if (sz > 1)
 								i = inputItem(subset.size(), editREQUEST);
 							std::cout << "(Press Enter to skip input of a new value)" << std::endl;
-							c.edit(subset.getCont()[i]);
+							c.edit(subset[i]);
 							break;
 						case 3: //save to file
-							f.open(inputFileName());
-							subset.saveToFile(f);
+							f.open(inputFileName(), std::fstream::out);
+							if (!subset.saveToFile(f))
+								std::cout << "Error of opening file." << std::endl;
 							break;
 						}
 					}
@@ -242,10 +268,10 @@ int main()
 			catch (char* back) { }
 		break;
 		case 4: //console output
-			c.outputToConsole();
+			c.output(std::cout);
 			break;
 		case 5: //save to file
-			f.open(inputFileName());
+			f.open(inputFileName(), std::fstream::out);
 			if (!c.saveToFile(f))
 				std::cout << "Error of opening file." << std::endl;
 			break;

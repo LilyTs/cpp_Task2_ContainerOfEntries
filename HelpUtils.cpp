@@ -29,7 +29,9 @@ int inputIntValue(const int default, const std::string msg, const int min, const
 	while (true) {
 		std::cout << msg;
 		try {
-			std::cin >> str;
+			//std::cin >> str;
+			std::getline(std::cin, str);
+			std::cin.ignore();
 			if (str != "") {
 				res = std::stoi(str);
 				while (res < min || res > max) {
@@ -48,7 +50,9 @@ int inputIntValue(const int default, const std::string msg, const int min, const
 std::string inputStringValue(const std::string default, const std::string msg) {
 	std::string str, res = default; 
 	std::cout << msg; 
-	std::cin >> str; 
+	//std::cin >> str; 
+	std::getline(std::cin, str);
+	std::cin.ignore();
 	if (str != "")
 		res = str;
 	return res;

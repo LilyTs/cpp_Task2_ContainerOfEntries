@@ -24,15 +24,13 @@ public:
 	MyContainer binSearchByGroup(const std::string query);
 	MyContainer binSearchByMark(const int query);
 
-	void remove(Entry en);
-	void outputToConsole() const;
-	bool saveToFile(std::fstream &f) const;
-	bool loadFromFile(std::fstream &f);
 	void edit(Entry &en);
+	std::deque<Entry>::iterator begin();
+	std::deque<Entry>::iterator end();
 
-	double calcAverageMarkByDiscipline(const std::string query) const;
-	double calcAverageMarkByCourse(const int query) const;
-	double calcAverageMarkByGroup(const std::string query) const;
+	float calcAverageMarkByDiscipline(const std::string query) const;
+	float calcAverageMarkByCourse(const int query) const;
+	float calcAverageMarkByGroup(const std::string query) const;
 };
 
 

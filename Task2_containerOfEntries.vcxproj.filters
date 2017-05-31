@@ -51,7 +51,7 @@
     <ClInclude Include="Collectors.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="CalculatorsAvrMark.h">
+    <ClInclude Include="CalculatorAvrMark.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,7 +89,7 @@
     <ClCompile Include="Collectors.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="CalculatorsAvrMark.cpp">
+    <ClCompile Include="CalculatorAvrMark.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>

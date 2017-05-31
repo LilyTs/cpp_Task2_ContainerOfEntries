@@ -63,3 +63,15 @@ public:
 	std::deque<Entry> getCollection();
 	void virtual operator()(const Entry en);
 };
+
+class DisciplineCollector
+{
+private:
+	std::string discipline;
+	std::deque<Entry> *c;
+
+public:
+	DisciplineCollector(const std::string d);
+	std::deque<Entry> getCollection();
+	void virtual operator()(const Entry en);
+};

@@ -39,8 +39,8 @@ public:
 		c.erase(it);
 	}
 
-	void outputToConsole() const {
-		copy(c.begin(), c.end(), std::ostream_iterator<T>(std::cout, "\n"));
+	void output(std::ostream &os) const {
+		copy(c.begin(), c.end(), std::ostream_iterator<T>(os, "\n"));
 	}
 
 	bool saveToFile(std::fstream &f) const {
@@ -72,20 +72,8 @@ public:
 		return false;
 	}
 
-	void edit(T &el) {}
-
-	template<class Calc>
-	double calcAverageMark(Calc calc) const {
-		std::for_each(c.begin(), c.end(), calc);
-		return calc.getAvrMark();
-	}
-
-	std::deque<T>& getCont() {
-		return c;
-	}
-
-	void setCont(std::deque<T> value) {
-		c = value;
+	T operator[](int i) {
+		return c[i];
 	}
 
 	int size() {
@@ -95,7 +83,7 @@ public:
 	bool empty() {
 		return c.empty();
 	}
-
+	
 protected:
 	std::deque<T> c;
 };

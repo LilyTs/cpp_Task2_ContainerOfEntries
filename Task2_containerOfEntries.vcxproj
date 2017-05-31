@@ -145,7 +145,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CalculatorsAvrMark.h" />
+    <ClInclude Include="CalculatorAvrMark.h" />
     <ClInclude Include="Collectors.h" />
     <ClInclude Include="Comparators.h" />
     <ClInclude Include="Container.h" />
@@ -159,7 +159,7 @@
     <ClInclude Include="UInterface.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CalculatorsAvrMark.cpp" />
+    <ClCompile Include="CalculatorAvrMark.cpp" />
     <ClCompile Include="Collectors.cpp" />
     <ClCompile Include="Comparators.cpp" />
     <ClCompile Include="Container.cpp" />

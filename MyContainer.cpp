@@ -6,7 +6,7 @@
 #include "HelpUtils.h"
 #include "Comparators.h"
 #include "Collectors.h"
-#include "CalculatorsAvrMark.h"
+#include "CalculatorAvrMark.h"
 
 MyContainer::MyContainer() {
 	c = std::deque<Entry>();
@@ -89,39 +89,70 @@ MyContainer MyContainer::binSearchByMark(const int query) {
 	return binarySearch(cmp, coll, en);
 }
 
-void MyContainer::remove(Entry en) {
-	return Container::remove(en);
-}
-
-void MyContainer::outputToConsole()  const {
-	return Container::outputToConsole();
-}
-
-bool MyContainer::saveToFile(std::fstream &f) const {
-	return Container::saveToFile(f);
-}
-
-bool MyContainer::loadFromFile(std::fstream &f) {
-	return Container::loadFromFile(f);
-}
-
 void MyContainer::edit(Entry &en) {
 	std::deque<Entry>::iterator it = std::find(c.begin(), c.end(), en);
-	it->edit();
+	edit(*it);
 }
 
-double MyContainer::calcAverageMarkByDiscipline(const std::string query) const {
+/*float MyContainer::calcAverageMarkByDiscipline(const std::string query) const {
 	AvrMarkByDiscipline calc = AvrMarkByDiscipline(query);
-	return calcAverageMark<AvrMarkByDiscipline>(calc);
+	for (auto el : c) calc(el);
+		return calc.getAvrMark();
 }
 
-double MyContainer::calcAverageMarkByCourse(const int query) const {
+float MyContainer::calcAverageMarkByCourse(const int query) const {
 	AvrMarkByCourse calc = AvrMarkByCourse(query);
-	return calcAverageMark<AvrMarkByCourse>(calc);
+	for (auto el : c) calc(el);
+		return calc.getAvrMark();
 }
 
-double MyContainer::calcAverageMarkByGroup(const std::string query) const {
+float MyContainer::calcAverageMarkByGroup(const std::string query) const {
 	AvrMarkByGroup calc = AvrMarkByGroup(query);
-	return calcAverageMark<>(calc);
+	for (auto el : c) calc(el);
+		return calc.getAvrMark();
+}*/
+
+float MyContainer::calcAverageMarkByDiscipline(const std::string query)const {
+	DisciplineCollector coll = DisciplineCollector(query);
+	MyContainer cont = MyContainer(linearSearch(coll));
+
+	AvrMark calc = AvrMark(cont.size());
+	for (auto el : cont) 
+		calc(el);
+	return calc.getAvrMark();
+
+	/*int count = cont.size();
+	int sum = 0;
+	for (auto en : cont) {
+		sum += en.getMark();
+	}*/
+}
+
+float MyContainer::calcAverageMarkByCourse(const int query) const {
+	CourseCollector coll = CourseCollector(query);
+	MyContainer cont = MyContainer(linearSearch(coll));
+
+	AvrMark calc = AvrMark(cont.size());
+	for (auto el : cont)
+		calc(el);
+	return calc.getAvrMark();
+}
+
+float MyContainer::calcAverageMarkByGroup(const std::string query) const {
+	GroupCollector coll = GroupCollector(query);
+	MyContainer cont = MyContainer(linearSearch(coll));
+
+	AvrMark calc = AvrMark(cont.size());
+	for (auto el : cont)
+		calc(el);
+	return calc.getAvrMark();
+}
+
+std::deque<Entry>::iterator MyContainer::begin() {
+	return c.begin();
+}
+
+std::deque<Entry>::iterator MyContainer::end() {
+	return c.end();
 }
 

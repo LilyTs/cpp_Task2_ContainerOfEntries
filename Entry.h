@@ -18,7 +18,7 @@ public:
 	std::string toString() const;
 	bool operator==(const Entry &en) const;
 	bool operator!=(const Entry &en) const;
-	void edit();
+	//void edit();
 	const int getNumOfRecordBook() const;
 	const std::string getSurname() const;
 	const int getCourse() const;

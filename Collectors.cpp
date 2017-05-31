@@ -77,3 +77,17 @@ void MarkCollector::operator()(const Entry en) {
 	if (en.getMark() == mark)
 		(*c).push_back(en);
 }
+
+DisciplineCollector::DisciplineCollector(const std::string d) {
+	discipline = d;
+	c = new std::deque<Entry>();
+}
+
+std::deque<Entry> DisciplineCollector::getCollection() {
+	return *c;
+}
+
+void DisciplineCollector::operator()(const Entry en) {
+	if (en.getDiscipline() == discipline)
+		(*c).push_back(en);
+}
