@@ -6,10 +6,10 @@
 class AvrMark
 {
 private:
-	int count;
+	int count = 0;
 	int sum = 0;
 public:
-	AvrMark(const int n);
+	AvrMark();
 	float getAvrMark();
 	void operator()(const Entry en);
 };

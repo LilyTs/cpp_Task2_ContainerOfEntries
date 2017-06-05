@@ -24,7 +24,7 @@ public:
 	MyContainer binSearchByGroup(const std::string query);
 	MyContainer binSearchByMark(const int query);
 
-	void edit(Entry &en);
+	bool edit(Entry &en);
 	std::deque<Entry>::iterator begin();
 	std::deque<Entry>::iterator end();
 

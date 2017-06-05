@@ -232,7 +232,9 @@ int main()
 								i = inputItem(subset.size(), editREQUEST);
 							std::cout << "(Press Enter to skip input of a new value)" << std::endl;
 							std::getline(std::cin, str);
-							c.edit(subset[i]);
+							if (!c.edit(subset[i])) {
+								std::cout << "\nSuch entry already exists." << std::endl;
+							}
 							break;
 						case 3: //save to file
 							f.open(inputFileName(), std::fstream::out);

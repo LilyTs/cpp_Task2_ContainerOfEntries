@@ -89,9 +89,16 @@ MyContainer MyContainer::binSearchByMark(const int query) {
 	return binarySearch(cmp, coll, en);
 }
 
-void MyContainer::edit(Entry &en) {
+bool MyContainer::edit(Entry &en) {
 	std::deque<Entry>::iterator it = std::find(c.begin(), c.end(), en);
-	inputEditedEntry(*it);
+	Entry tmpEn = en;
+	inputEditedEntry(tmpEn);
+	std::deque<Entry>::iterator tmpIt = std::find(c.begin(), c.end(), tmpEn);
+	if (tmpIt == end()) {
+		(*it) = tmpEn;
+		return true;
+	}
+	return false;
 }
 
 float MyContainer::calcAverageMarkByDiscipline(const std::string query)const {
@@ -99,7 +106,7 @@ float MyContainer::calcAverageMarkByDiscipline(const std::string query)const {
 	MyContainer cont = MyContainer(linearSearch(coll));
 
 	if (!cont.empty()) {
-		AvrMark calc = AvrMark(cont.size());
+		AvrMark calc = AvrMark();
 		for (auto el : cont)
 			calc(el);
 		return calc.getAvrMark();
@@ -112,7 +119,7 @@ float MyContainer::calcAverageMarkByCourse(const int query) const {
 	MyContainer cont = MyContainer(linearSearch(coll));
 	
 	if (!cont.empty()) {
-		AvrMark calc = AvrMark(cont.size());
+		AvrMark calc = AvrMark();
 		for (auto el : cont)
 			calc(el);
 		return calc.getAvrMark();
@@ -125,7 +132,7 @@ float MyContainer::calcAverageMarkByGroup(const std::string query) const {
 	MyContainer cont = MyContainer(linearSearch(coll));
 
 	if (!cont.empty()) {
-		AvrMark calc = AvrMark(cont.size());
+		AvrMark calc = AvrMark();
 		for (auto el : cont)
 			calc(el);
 		return calc.getAvrMark();
