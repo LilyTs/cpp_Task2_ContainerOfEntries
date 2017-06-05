@@ -86,7 +86,7 @@ char inputTypeOfSearch() {
 		item = _getche();
 		ok = (item == 'L') || (item == 'l') || (item == 'B') || (item == 'b');
 		if (!ok)
-			std::cout << "Input error! Repeat:" << std::endl;
+			std::cout << "\nInput error! Repeat:" << std::endl;
 	} while (!ok);
 	return item;
 }
@@ -108,11 +108,6 @@ std::string inputFileName() {
 	std::cin >> fileName;
 	return fileName;
 }
-
-/*
-void outputContainer(MyContainer c) {
-	copy(c.begin(), c.end(), std::ostream_iterator<Entry>(std::cout, "\n"));
-}*/
 
 //возвращает истину, если результирующий контейнер был выведен (не пустой)
 bool outputRes(MyContainer &res) {
@@ -191,26 +186,6 @@ MyContainer find(MyContainer &c) {
 	}
 }
 
-void edit(Entry &en) { 
-	std::string msg = "\nNumber of record book (current value = " + std::to_string(en.getNumOfRecordBook()) + "): ";
-	en.setNumOfRecordBook(inputIntValue(en.getNumOfRecordBook(), msg));
-
-	msg = "\nSurname (current value = " + en.getSurname() + "): ";
-	en.setSurname(inputStringValue(en.getSurname(), msg));
-
-	msg = "\nCourse (current value = " + std::to_string(en.getCourse()) + "): ";
-	en.setCourse(inputIntValue(en.getNumOfRecordBook(), msg, 1, 4));
-
-	msg = "\nGroup (current value = " + en.getGroup() + "): ";
-	en.setGroup(inputStringValue(en.getSurname(), msg));
-
-	msg = "\nDiscipline (current value = " + en.getDiscipline() + "): ";
-	en.setDiscipline(inputStringValue(en.getSurname(), msg));
-
-	msg = "\nMark (current value = " + std::to_string(en.getMark()) + "): ";
-	en.setMark(inputIntValue(en.getMark(), msg, 2, 5));
-}
-
 int main()
 {
 	setlocale(LC_ALL, "Russian");
@@ -222,6 +197,7 @@ int main()
 	std::deque<Entry>::iterator it;
 	Entry en;
 	float m = 0;
+	std::string str = "";
 
 	while ((item = inputItem(cntMainMenuITEMS, mainMENU)) != cntMainMenuITEMS)
 	{
@@ -255,6 +231,7 @@ int main()
 							if (sz > 1)
 								i = inputItem(subset.size(), editREQUEST);
 							std::cout << "(Press Enter to skip input of a new value)" << std::endl;
+							std::getline(std::cin, str);
 							c.edit(subset[i]);
 							break;
 						case 3: //save to file
@@ -290,7 +267,7 @@ int main()
 			if (m != 0)
 				std::cout << "\nAverage mark = " << m << std::endl;
 			else
-				std::cout << "Such entries are not found.";
+				std::cout << "Such entries are not found." << std::endl;
 			break;
 		case 0:
 			exit(0);

@@ -91,61 +91,46 @@ MyContainer MyContainer::binSearchByMark(const int query) {
 
 void MyContainer::edit(Entry &en) {
 	std::deque<Entry>::iterator it = std::find(c.begin(), c.end(), en);
-	edit(*it);
+	inputEditedEntry(*it);
 }
-
-/*float MyContainer::calcAverageMarkByDiscipline(const std::string query) const {
-	AvrMarkByDiscipline calc = AvrMarkByDiscipline(query);
-	for (auto el : c) calc(el);
-		return calc.getAvrMark();
-}
-
-float MyContainer::calcAverageMarkByCourse(const int query) const {
-	AvrMarkByCourse calc = AvrMarkByCourse(query);
-	for (auto el : c) calc(el);
-		return calc.getAvrMark();
-}
-
-float MyContainer::calcAverageMarkByGroup(const std::string query) const {
-	AvrMarkByGroup calc = AvrMarkByGroup(query);
-	for (auto el : c) calc(el);
-		return calc.getAvrMark();
-}*/
 
 float MyContainer::calcAverageMarkByDiscipline(const std::string query)const {
 	DisciplineCollector coll = DisciplineCollector(query);
 	MyContainer cont = MyContainer(linearSearch(coll));
 
-	AvrMark calc = AvrMark(cont.size());
-	for (auto el : cont) 
-		calc(el);
-	return calc.getAvrMark();
-
-	/*int count = cont.size();
-	int sum = 0;
-	for (auto en : cont) {
-		sum += en.getMark();
-	}*/
+	if (!cont.empty()) {
+		AvrMark calc = AvrMark(cont.size());
+		for (auto el : cont)
+			calc(el);
+		return calc.getAvrMark();
+	}
+	return 0;
 }
 
 float MyContainer::calcAverageMarkByCourse(const int query) const {
 	CourseCollector coll = CourseCollector(query);
 	MyContainer cont = MyContainer(linearSearch(coll));
-
-	AvrMark calc = AvrMark(cont.size());
-	for (auto el : cont)
-		calc(el);
-	return calc.getAvrMark();
+	
+	if (!cont.empty()) {
+		AvrMark calc = AvrMark(cont.size());
+		for (auto el : cont)
+			calc(el);
+		return calc.getAvrMark();
+	}
+	return 0;
 }
 
 float MyContainer::calcAverageMarkByGroup(const std::string query) const {
 	GroupCollector coll = GroupCollector(query);
 	MyContainer cont = MyContainer(linearSearch(coll));
 
-	AvrMark calc = AvrMark(cont.size());
-	for (auto el : cont)
-		calc(el);
-	return calc.getAvrMark();
+	if (!cont.empty()) {
+		AvrMark calc = AvrMark(cont.size());
+		for (auto el : cont)
+			calc(el);
+		return calc.getAvrMark();
+	}
+	return 0;
 }
 
 std::deque<Entry>::iterator MyContainer::begin() {
