@@ -7,8 +7,7 @@
  *  поиск в двух вариантах: линейный поиск и двоичный поиск на отсортированном контейнере.
  *  4. Предусмотреть вывод подмножества выборки на экран и в файл.
  *  ----------------------------------------------------------------------------------------------------------------------------
- *  Мой вариант:
- *  9. Запись в журнале экзаменационной сессии содержит следующую информацию: курс, код группы, фамилия студента, номер зачетной
+ *  №9. Запись в журнале экзаменационной сессии содержит следующую информацию: курс, код группы, фамилия студента, номер зачетной
  *  книжки, дисциплина, оценка по дисциплине. Вычисляются средние баллы по дисциплине, по группе, по курсу. Поиск по группе, по курсу,
  *  по номеру зачетной книжки, по фамилии, по оценкам.
  */
@@ -30,9 +29,13 @@ Entry& inputEntry(Entry &en) {
 	std::string discipline;
 	int mark;
 	std::string msg;
-
-	msg = "  Number of student's record book: ";
-	numRecBook = inputIntValue(msg);
+	do{
+		msg = "  Number of student's record book: ";
+		numRecBook = inputIntValue(msg);
+		if (numRecBook < 0)
+			std::cout << "Error: negative value" << std::endl;
+	} while (numRecBook < 0);
+	
 	std::cout << "  Surname: ";
 	std::cin >> surname;
 	msg = "  Course: ";
@@ -65,17 +68,20 @@ const std::string removeREQUEST = "What entry do you want to remove? Enter numbe
 const std::string editREQUEST = "What entry do you want to edit? Enter number: ";
 
 int inputItem(const int cntITEMS, const std::string REQUEST) {
-	int item;
+	/*int item;
+	std::string str;
 	bool ok;
 	do {
 		std::cout << REQUEST << std::endl;
-		std::cin >> item;
+		std::cin >> str;
+		item = std::stoi(str);
 		ok = (item >= 0) && (item <= cntITEMS - 1);
 		if (!ok)
 			std::cout << "Incorrect input data." << std::endl;
 	} while (!ok);
 	std::cout << std::endl;
-	return item;
+	return item;*/
+	return inputIntValue(REQUEST, 0, cntITEMS - 1);
 }
 
 char inputTypeOfSearch() {
@@ -247,7 +253,10 @@ int main()
 			catch (char* back) { }
 		break;
 		case 4: //console output
-			c.output(std::cout);
+			if (!c.empty())
+				c.output(std::cout);
+			else
+				std::cout << "No entries";
 			break;
 		case 5: //save to file
 			f.open(inputFileName(), std::fstream::out);

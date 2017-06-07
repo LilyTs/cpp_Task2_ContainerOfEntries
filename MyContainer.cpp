@@ -20,14 +20,6 @@ MyContainer::~MyContainer() {
 
 }
 
-bool MyContainer::add(const Entry &en) {
-	if (std::find(c.begin(), c.end(), en) == c.end()) {
-	c.push_back(en); 
-		return true;
-	}
-	return false;
-}
-
 MyContainer MyContainer::linSearchByNumOfRecordBook(const int query) const {
 	NumOfRecordBookCollector coll = NumOfRecordBookCollector(query);
 	return MyContainer(linearSearch(coll));
