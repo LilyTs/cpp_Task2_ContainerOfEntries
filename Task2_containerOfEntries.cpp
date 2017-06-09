@@ -183,7 +183,7 @@ int main()
 {
 	setlocale(LC_ALL, "Russian");
 	int item, sz;
-	int i = 0;
+	int i;
 	std::fstream f;
 	MyContainer c = MyContainer();
 	MyContainer subset = MyContainer();
@@ -217,11 +217,13 @@ int main()
 						std::cout << "Select action: \n";
 						switch (inputItem(cntFindSubmenuITEMS, findSUBMENU)) {
 						case 1: //remove
+							i = 0;
 							if (sz > 1) 
 								i = inputItem(subset.size(), removeREQUEST);
 							c.remove(subset[i]);
 							break;
 						case 2: //edit
+							i = 0;
 							if (sz > 1)
 								i = inputItem(subset.size(), editREQUEST);
 							std::cout << "(Press Enter to skip input of a new value)" << std::endl;

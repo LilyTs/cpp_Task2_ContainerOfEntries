@@ -24,7 +24,7 @@ int inputIntValue(const std::string msg, const int min, const int max) {
 	}
 }
 
-int inputIntValue(const int default, const std::string msg, const int min, const int max) {
+int inputIntValue(const int default, bool &def, const std::string msg, const int min, const int max) {
 	int res = default;
 	std::string str;
 	int buf;
@@ -34,6 +34,7 @@ int inputIntValue(const int default, const std::string msg, const int min, const
 		try {
 			std::getline(std::cin, str);
 			if (str != "") {
+				def = false;
 				res = std::stoi(str);
 				while (res < min || res > max) {
 					std::cout << "\nIncorrect input data. Repeat: ";
@@ -50,21 +51,24 @@ int inputIntValue(const int default, const std::string msg, const int min, const
 	}
 }
 
-std::string inputStringValue(const std::string default, const std::string msg) {
+std::string inputStringValue(const std::string default, const std::string msg, bool &def) {
 	std::string str, res = default; 
 	std::cout << msg << std::endl;
 	std::getline(std::cin, str);
-	if (str != "")
+	if (str != "") {
+		def = false;
 		res = str;
+	}
 	return res;
 }
 
-void inputEditedEntry(Entry &en) {
+//returns false if all leave default
+bool inputEditedEntry(Entry &en, bool def) {
 	std::string msg;
 	int n;
 	do {
 		msg = "\nNumber of record book (current value = " + std::to_string(en.getNumOfRecordBook()) + "): ";
-		n = inputIntValue(en.getNumOfRecordBook(), msg);
+		n = inputIntValue(en.getNumOfRecordBook(), def, msg);
 		if (n < 0)
 			std::cout << "Error: negative value" << std::endl;
 	} while (n < 0);
@@ -72,17 +76,19 @@ void inputEditedEntry(Entry &en) {
 	en.setNumOfRecordBook(n);
 
 	msg = "\nSurname (current value = " + en.getSurname() + "): ";
-	en.setSurname(inputStringValue(en.getSurname(), msg));
+	en.setSurname(inputStringValue(en.getSurname(), msg, def));
 
 	msg = "\nCourse (current value = " + std::to_string(en.getCourse()) + "): ";
-	en.setCourse(inputIntValue(en.getCourse(), msg, 1, 4));
+	en.setCourse(inputIntValue(en.getCourse(), def, msg, 1, 4));
 
 	msg = "\nGroup (current value = " + en.getGroup() + "): ";
-	en.setGroup(inputStringValue(en.getGroup(), msg));
+	en.setGroup(inputStringValue(en.getGroup(), msg, def));
 
 	msg = "\nDiscipline (current value = " + en.getDiscipline() + "): ";
-	en.setDiscipline(inputStringValue(en.getDiscipline(), msg));
+	en.setDiscipline(inputStringValue(en.getDiscipline(), msg, def));
 
 	msg = "\nMark (current value = " + std::to_string(en.getMark()) + "): ";
-	en.setMark(inputIntValue(en.getMark(), msg, 2, 5));
+	en.setMark(inputIntValue(en.getMark(), def, msg, 2, 5));
+
+	return def;
 }

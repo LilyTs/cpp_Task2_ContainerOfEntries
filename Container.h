@@ -1,13 +1,6 @@
 #pragma once
 #include "stdafx.h"
-/*!!!!!!!!!!!!!
-  поставить защиту от загрузки из файла содержащего некорректные данные
-  варианты:
-   1) написать метод проверки записи на корректность и вызывать в ф-ии загрузки перед добавлением
-   2)-//- вызывать его в самой функции добавления
-   3) загрузить все как есть, а потом проверить: корректны ли данные в контейнере?
-   Думаю, 2 вариант лучший.
-!!!!!!!!!!!!!!!!!!*/
+
 template<class T>
 class Container
 {
@@ -52,7 +45,13 @@ public:
 
 	bool saveToFile(std::fstream &f) const {
 		if (f.is_open()) {
-			copy(c.begin(), c.end(), std::ostream_iterator<T>(f, "\n"));
+			if (!c.empty()) {
+				copy(c.begin(), c.end() - 1, std::ostream_iterator<T>(f, "\n"));
+				copy(c.end() - 1, c.end(), std::ostream_iterator<T>(f));
+			}
+			else {
+				copy(c.begin(), c.end(), std::ostream_iterator<T>(f, "\n"));
+			}
 			f.close();
 			return true;
 		}

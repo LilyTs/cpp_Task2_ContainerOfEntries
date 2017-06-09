@@ -84,12 +84,17 @@ MyContainer MyContainer::binSearchByMark(const int query) {
 bool MyContainer::edit(Entry &en) {
 	std::deque<Entry>::iterator it = std::find(c.begin(), c.end(), en);
 	Entry tmpEn = en;
-	inputEditedEntry(tmpEn);
-	std::deque<Entry>::iterator tmpIt = std::find(c.begin(), c.end(), tmpEn);
-	if (tmpIt == end()) {
+	std::deque<Entry>::iterator tmpIt;
+	bool def = true;
+	inputEditedEntry(tmpEn, def); //true если все осталось по дефолту
+	if(def)
+		tmpIt = std::find(c.begin(), c.end(), tmpEn);
+	if (tmpIt == end() && !def) {
 		(*it) = tmpEn;
 		return true;
 	}
+	if (def)
+		return true;
 	return false;
 }
 
@@ -145,10 +150,10 @@ bool MyContainer::loadFromFile(std::fstream &f) {
 
 		try
 		{
-			std::istream_iterator<Entry> is(f);
 			c.clear();
 			if (f.eof())
 				return false;
+			std::istream_iterator<Entry> is(f);
 			add(*is);
 			while (!f.fail() && !f.eof()) {
 				++is;
@@ -157,7 +162,7 @@ bool MyContainer::loadFromFile(std::fstream &f) {
 		}
 		catch (std::exception)
 		{
-			std::cout << "Некорректно содержимое файла!" << std::endl;
+			std::cout << "Файл пуст или содержит некорректные данные." << std::endl;
 		}
 		f.close();
 		return true;
