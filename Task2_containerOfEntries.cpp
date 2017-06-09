@@ -68,19 +68,6 @@ const std::string removeREQUEST = "What entry do you want to remove? Enter numbe
 const std::string editREQUEST = "What entry do you want to edit? Enter number: ";
 
 int inputItem(const int cntITEMS, const std::string REQUEST) {
-	/*int item;
-	std::string str;
-	bool ok;
-	do {
-		std::cout << REQUEST << std::endl;
-		std::cin >> str;
-		item = std::stoi(str);
-		ok = (item >= 0) && (item <= cntITEMS - 1);
-		if (!ok)
-			std::cout << "Incorrect input data." << std::endl;
-	} while (!ok);
-	std::cout << std::endl;
-	return item;*/
 	return inputIntValue(REQUEST, 0, cntITEMS - 1);
 }
 
@@ -213,7 +200,8 @@ int main()
 		{
 		case 1: //load data
 			f.open(inputFileName(), std::fstream::in);
-			c.loadFromFile(f);
+			if (!c.loadFromFile(f))
+				std::cout << "Ошибка чтения из файла." << std::endl;
 			break;
 		case 2: //add
 			if (c.add(inputEntry(en)))

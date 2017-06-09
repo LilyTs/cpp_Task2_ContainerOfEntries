@@ -4,6 +4,7 @@
 
 Entry::Entry()
 {
+	course = 0;
 }
 
 Entry::~Entry()
@@ -11,12 +12,12 @@ Entry::~Entry()
 }
 
 Entry::Entry(int aNumOfRecordBook, std::string aSurname, int aCourse, std::string aGroup, std::string  aDiscipline, int aMark) {
-	numOfRecordBook = aNumOfRecordBook;
-	surname = aSurname;
-	course = aCourse;
-	group = aGroup;
-	discipline = aDiscipline;
-	mark = aMark;
+numOfRecordBook = aNumOfRecordBook;
+surname = aSurname;
+course = aCourse;
+group = aGroup;
+discipline = aDiscipline;
+mark = aMark;
 }
 
 std::string Entry::toString() const {
@@ -105,31 +106,44 @@ std::ostream& operator<<(std::ostream &os, const Entry &en) {
 	return os;
 }*/
 
-std::string skipFieldsNames(std::istream &is) {
+std::string skipFieldsNames(std::istream &is , std::string fieldName) {
 	std::string str;
-
-	is >> str;
-	while ((str.find(":") != -1) || str == "\t" || str == "\n" || str == " ")
+	std::string substr = " ";
+	std::string helpStr;
+	getline(is, str);
+	int pos = str.find(":");
+	if ((pos == -1) && (str != ""))
+		throw std::exception();
+	else
 	{
-		is >> str;
+		helpStr = str.substr(0, pos);
+		if (fieldName != helpStr)
+			throw std::exception();
+		else
+		{
+			while ((pos <= str.length()) && (substr == " "))
+			{
+				++pos;
+				substr = str[pos];
+			}
+			if (pos > str.length())
+				return "";
+			else
+			{
+				return str.substr(pos);
+			}
+		}
 	}
-
-	return str;
 }
 
 std::istream& operator>>(std::istream &is, Entry &en) {
-	std::string str;
 
-	try {
-		en.setNumOfRecordBook(stoi(skipFieldsNames(is)));
-		en.setSurname(skipFieldsNames(is));
-		en.setCourse(stoi(skipFieldsNames(is)));
-		en.setGroup(skipFieldsNames(is));
-		en.setDiscipline(skipFieldsNames(is));
-		en.setMark(stoi(skipFieldsNames(is)));
-	}
-	catch (const std::exception) {
-	}
-
+	en.setNumOfRecordBook(stoi(skipFieldsNames(is, "Number of record book")));
+	en.setSurname(skipFieldsNames(is, "Surname"));
+	en.setCourse(stoi(skipFieldsNames(is, "Course")));
+	en.setGroup(skipFieldsNames(is, "Group"));
+	en.setDiscipline(skipFieldsNames(is, "Discipline"));
+	en.setMark(stoi(skipFieldsNames(is, "Mark")));
+	skipFieldsNames(is, "");
 	return is;
 }

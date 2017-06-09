@@ -140,3 +140,28 @@ std::deque<Entry>::iterator MyContainer::end() {
 	return c.end();
 }
 
+bool MyContainer::loadFromFile(std::fstream &f) {
+	if (f.is_open()) {
+
+		try
+		{
+			std::istream_iterator<Entry> is(f);
+			c.clear();
+			if (f.eof())
+				return false;
+			add(*is);
+			while (!f.fail() && !f.eof()) {
+				++is;
+				add(*is);
+			}
+		}
+		catch (std::exception)
+		{
+			std::cout << "Некорректно содержимое файла!" << std::endl;
+		}
+		f.close();
+		return true;
+	}
+	return false;
+}
+

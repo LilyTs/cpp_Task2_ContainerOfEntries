@@ -10,6 +10,7 @@ public:
 	MyContainer(); 
 	MyContainer(std::deque<Entry> cont);
 	~MyContainer();
+	bool loadFromFile(std::fstream &f);
 
 	MyContainer linSearchByNumOfRecordBook(const int query) const;
 	MyContainer linSearchBySurname(const std::string query) const;
